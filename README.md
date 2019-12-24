@@ -1,0 +1,2 @@
+# huobi_global_data_acquisition
+火币网交易所实时数据采集
