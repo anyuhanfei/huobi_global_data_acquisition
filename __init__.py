@@ -7,6 +7,12 @@ import os
 系统全局配置
 """
 
+'''coin type'''
+COIN_TYPE = [
+    'BTC/USDT', 'ETH/USDT', 'XRP/USDT', 'LTC/USDT', 'BCH/USDT', 'EOS/USDT', 'EOS/ETH', 'ADA/ETH', 'OMG/ETH',
+    'LTC/BTC', 'BCH/BTC', 'ETH/BTC', 'EOS/BTC', 'XRP/BTC', 'ETC/BTC'
+]
+
 '''use database type'''
 DATABASE_TYPE = 'redis'  # redis or mysql
 
