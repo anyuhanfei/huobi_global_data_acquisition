@@ -26,6 +26,7 @@ DATABASE_TYPE = 'redis'  # redis or mysql
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
 REDIS_AUTH = ''
+REDIS_PASSWROD = ''
 
 '''mysql set'''
 MYSQL_HOST = '127.0.0.1'

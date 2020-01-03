@@ -17,6 +17,6 @@ if __name__ == "__main__":
         child_process.start()
         time.sleep(0.1)
     while True:
-        command = input()
+        command = input('退出请输入out:')
         if command == 'out':
             break
