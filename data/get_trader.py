@@ -62,7 +62,7 @@ def get_trader_redis(coin_type, data):
     from config import redis_conn
     # 发布和存储
     redis_conn.REDIS.publish('vb:trader:chan:mobei', str(data).encode())
-    redis_conn.REDIS.set('vb:trader:newitem:', str(data).encode())
+    redis_conn.REDIS.set('vb:trader:newitem:%s' % (coin_type), str(data).encode())
 
 
 def get_trader_mysql(coin_type):

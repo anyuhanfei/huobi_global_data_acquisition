@@ -31,7 +31,7 @@ def get_new_price_redis(coin_type, data):
     '''
     from config import redis_conn
     # 存储
-    redis_conn.REDIS.set('vb:depth:newitem:%s' % (coin_type), data['tick']['close'])
+    redis_conn.REDIS.set('vb:ticker:newprice:%s' % (coin_type), data['tick']['close'])
 
 
 def get_new_price_mysql(data):
