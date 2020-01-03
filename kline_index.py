@@ -1,7 +1,22 @@
 '''
 火币网交易所K线图爬虫
 '''
+import multiprocessing
+import time
 
+import __init__
 from data import goods_kline
 
-goods_kline.timekeeping('BTC_USDT')
+
+if __name__ == "__main__":
+    jobs = []
+    for coin_type in __init__.COIN_TYPE_KLINE:
+        child_process = multiprocessing.Process(target=goods_kline.timekeeping, args=(coin_type,))
+        child_process.daemon = True
+        jobs.append(child_process)
+        child_process.start()
+        time.sleep(0.1)
+    while True:
+        command = input()
+        if command == 'out':
+            break

@@ -45,7 +45,7 @@ def get_depth(coin_type):
     get_depth_url = __init__.get_depth_url % (coin_type_dispose)
     get_depth_content = __init__.get_url(get_depth_url, 'get')
     if get_depth_content == {}:
-        print('盘口数据获取失败')
+        __init__.add_log('data', 'get_depth', '盘口数据获取失败', 0)
         return None
     # 组合数据
     add_dict = combination_data(coin_type, get_depth_content)
@@ -55,7 +55,7 @@ def get_depth(coin_type):
     elif __init__.DATABASE_TYPE == 'mysql':
         add_data_mysql(add_dict)
     else:
-        print('数据存储类型错误')
+        __init__.add_log('data', 'get_depth', '数据存储类型错误', 0)
 
 
 def add_data_redis(add_data):

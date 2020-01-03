@@ -13,6 +13,11 @@ COIN_TYPE = [
     'LTC/BTC', 'BCH/BTC', 'ETH/BTC', 'EOS/BTC', 'XRP/BTC', 'ETC/BTC'
 ]
 
+COIN_TYPE_KLINE = [
+    'BTC_USDT', 'ETH_USDT', 'XRP_USDT', 'LTC_USDT', 'BCH_USDT', 'EOS_USDT', 'EOS_ETH', 'ADA_ETH', 'OMG_ETH',
+    'LTC_BTC', 'BCH_BTC', 'ETH_BTC', 'EOS_BTC', 'XRP_BTC', 'ETC_BTC'
+]
+
 '''use database type'''
 DATABASE_TYPE = 'redis'  # redis or mysql
 
@@ -57,8 +62,8 @@ def coin_type_dispose(search, str1, str2):
 def get_url(url, http_type, headers='', cookies=''):
     try:
         res = requests.get(url, timeout=VISIT_URL_TIMEOUT)
-    except BaseException:
-        add_log('访问接口发生错误')
+    except BaseException as e:
+        add_log('url', 'url', e)
         return {}
     if res.status_code == 200:
         return json.loads(res.content.decode())
@@ -66,10 +71,11 @@ def get_url(url, http_type, headers='', cookies=''):
         return {}
 
 
-def add_log(content, level=0):
+def add_log(type, coin_type, content, level=0):
     '''添加日志记录
     每天的日志单独记录，存放在当前月份命名的目录下
     Agrs:
+        type: 日志类型
         content: 日志内容
         level: 日志层级，0表示顶级，每增加一级多4个空格
     '''
@@ -77,8 +83,16 @@ def add_log(content, level=0):
     new_time = time.strftime("%Y-%m-%d %H:%M:%S")
     new_month = time.strftime("%Y-%m")
     new_day = time.strftime("%Y-%m-%d")
-    # 目录的检测与创建
-    log_dir_name = 'log/%s' % (new_month)
+    # 一级目录的检测与创建
+    log_dir_name = 'log/%s' % (type)
+    if not os.path.exists(log_dir_name):
+        os.makedirs(log_dir_name)
+    # 二级目录的检测与创建
+    log_dir_name = 'log/%s/%s' % (type, coin_type)
+    if not os.path.exists(log_dir_name):
+        os.makedirs(log_dir_name)
+    # 三级目录的检测与创建
+    log_dir_name = 'log/%s/%s/%s' % (type, coin_type, new_month)
     if not os.path.exists(log_dir_name):
         os.makedirs(log_dir_name)
     # 文件写入

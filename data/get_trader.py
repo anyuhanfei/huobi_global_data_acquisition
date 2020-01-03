@@ -29,26 +29,40 @@ def combination_data(coin_type, content):
     return add_dict
 
 
-def get_trader_redis(coin_type):
+def get_trader(coin_type):
     '''获取实时成交数据
     Agrs:
         coin_type: 网址的get参数，传入格式为 NAME/NAME
     '''
-    from config import redis_conn
-
     # 处理参数  NAME/NAME -> namename
     coin_type_dispose = __init__.coin_type_dispose(coin_type, '/', '')
     # 获取返回结果
     get_trader_url = __init__.get_trader_url % (coin_type_dispose)
     get_trader_content = __init__.get_url(get_trader_url, 'get')
     if get_trader_content == {}:
-        print('实时成交数据获取失败')
+        __init__.add_log('data', 'get_trader', '实时成交数据获取失败', 0)
         return None
     # 组合数据
     add_dict = combination_data(coin_type, get_trader_content)
+    # 储存和发布
+    if __init__.DATABASE_TYPE == 'redis':
+        get_trader_redis(coin_type, add_dict)
+    elif __init__.DATABASE_TYPE == 'mysql':
+        get_trader_mysql(add_dict)
+    else:
+        __init__.add_log('data', 'get_trader', '数据存储类型错误', 0)
+
+
+def get_trader_redis(coin_type, data):
+    '''将数据存储到redis
+    Agrs:
+        coin_type: 货币类型
+        data: 已整理数据，字典类型
+    '''
+    from config import redis_conn
     # 发布和存储
-    redis_conn.REDIS.publish('vb:trader:chan:mobei', str(add_dict).encode())
-    redis_conn.REDIS.set('vb:trader:newitem:', str(add_dict).encode())
+    redis_conn.REDIS.publish('vb:trader:chan:mobei', str(data).encode())
+    redis_conn.REDIS.set('vb:trader:newitem:', str(data).encode())
 
 
 def get_trader_mysql(coin_type):
