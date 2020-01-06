@@ -27,7 +27,7 @@ def combination_data(coin_type, content, usdt_price):
         'low': content['tick']['low'],
         'volume': content['tick']['amount'],
         'change': content['tick']['close'] - content['tick']['open'],
-        'changeRate': round((content['tick']['close'] - content['tick']['open']) / content['tick']['open'] * 100, 2),
+        'changeRate': str(round((content['tick']['close'] - content['tick']['open']) / content['tick']['open'] * 100, 2)) + '%',
         'buy': content['tick']['bid'][0],
         'sell': content['tick']['ask'][0]
     }
