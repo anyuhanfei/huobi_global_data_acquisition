@@ -1,4 +1,5 @@
 import time
+import math
 
 import __init__
 
@@ -19,18 +20,21 @@ def combination_data(coin_type, content):
     add_dict['time'] = time.strftime('%H:%M')
     add_dict['timestamp'] = int(time.time())
     add_dict['bids'] = []
+    bids = 0
     for i in range(0, 200 if len(content['tick']['bids']) >= 200 else len(content['tick']['bids'])):
+        bids += math.ceil(content['tick']['bids'][i][1])
         add_dict['bids'].append({
-            'totalSize': content['tick']['bids'][i][1],
+            'totalSize': bids,
             'price': content['tick']['bids'][i][0]
         })
     add_dict['asks'] = []
+    asks = 0
     for i in range(0, 200 if len(content['tick']['asks']) >= 200 else len(content['tick']['asks'])):
+        asks += math.ceil(content['tick']['asks'][i][1])
         add_dict['asks'].append({
-            'totalSize': content['tick']['asks'][i][1],
+            'totalSize': asks,
             'price': content['tick']['asks'][i][0]
         })
-    return add_dict
     return add_dict
 
 
