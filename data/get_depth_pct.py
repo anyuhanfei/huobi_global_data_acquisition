@@ -17,7 +17,7 @@ def combination_data(coin_type, content):
     add_dict['name'] = coin_type
     add_dict['date'] = time.strftime('%Y-%m-%d')
     add_dict['time'] = time.strftime('%H:%M')
-    add_dict['timestamp'] = time.time() * 1000
+    add_dict['timestamp'] = int(time.time())
     add_dict['bids'] = []
     for i in range(0, 200 if len(content['tick']['bids']) >= 200 else len(content['tick']['bids'])):
         add_dict['bids'].append({
@@ -65,7 +65,7 @@ def add_data_redis(add_data):
         add_dict: 已整理数据，字典类型
     '''
     from config import redis_conn
-    res_add_data = str(add_data).encode()
+    res_add_data = str(add_data).replace("'", '"').encode()
     redis_conn.REDIS.publish('vb:depth:pct:chan:mobei', res_add_data)
     redis_conn.REDIS.set('vb:depth:pct:newitem:', res_add_data)
 

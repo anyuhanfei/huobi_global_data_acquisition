@@ -18,7 +18,7 @@ def combination_data(coin_type, content, usdt_price):
         'name': coin_type,
         'date': time.strftime('%Y-%m-%d'),
         'time': time.strftime('%H:%M'),
-        'timestamp': time.time() * 1000,
+        'timestamp': int(time.time()),
         'price': content['tick']['close'],
         'cnyPrice': content['tick']['close'] * float(usdt_price.decode()),  # 这里是要获取usdt的价格
         'open': content['tick']['open'],
@@ -69,8 +69,8 @@ def get_ticker_redis(coin_type, data):
     usdt_price = redis_conn.REDIS['vb:indexTickerAll:usd2cny']
     add_dict = combination_data(coin_type, data, usdt_price)
     # 发布和储存
-    redis_conn.REDIS.publish('vb:ticker:chan:mobei', str(add_dict).encode())
-    redis_conn.REDIS.set('vb:ticker:newitem:', str(add_dict).encode())
+    redis_conn.REDIS.publish('vb:ticker:chan:mobei', str(add_dict).replace("'", '"').encode())
+    redis_conn.REDIS.set('vb:ticker:newitem:%s' % (coin_type), str(add_dict).encode())
 
 
 def get_ticker_mysql(coin_type):

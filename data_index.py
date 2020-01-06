@@ -24,7 +24,7 @@ def get_data(coin_type):
         get_new_price.get_new_price(coin_type)
         end_time = time.time()
         execution_time = end_time - start_time
-        time.sleep(0 if execution_time > 0.5 else 0.5 - execution_time)
+        time.sleep(0 if execution_time > __init__.GET_DATA_INTERVAL_TIME else __init__.GET_DATA_INTERVAL_TIME - execution_time)
 
 
 def usdt_cny_get():
@@ -47,7 +47,7 @@ if __name__ == '__main__':
         child_process.daemon = True
         jobs.append(child_process)
         child_process.start()
-        time.sleep(0.1)
+        time.sleep(__init__.GET_DATA_INTERVAL_TIME / len(__init__.COIN_TYPE))
     while True:
         command = input('退出请输入out:')
         if command == 'out':

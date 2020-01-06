@@ -6,6 +6,9 @@ import os
 """
 系统全局配置
 """
+'''get data interval time'''
+GET_DATA_INTERVAL_TIME = 0.5
+
 
 '''coin type'''
 COIN_TYPE = [
@@ -21,7 +24,6 @@ COIN_TYPE_KLINE = [
 '''use database type'''
 DATABASE_TYPE = 'redis'  # redis or mysql
 
-
 '''redis set'''
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
@@ -35,7 +37,6 @@ MYSQL_USER = 'root'
 MYSQL_PASSWORD = 'root'
 MYSQL_DBNAME = 'exchange_reptile'
 MYSQL_CHARSET = 'utf8'
-
 
 '''visit url'''
 VISIT_URL_TIMEOUT = 10  # 访问网址超时时间
@@ -61,8 +62,12 @@ def coin_type_dispose(search, str1, str2):
 
 
 def get_url(url, http_type, headers='', cookies=''):
+    if headers == '':
+        headers = {'user-agent': "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"}
+    if cookies == '':
+        cookies = {'__cfduid': "dee69a04290259373c4aa10d8316c5b951578028289"}
     try:
-        res = requests.get(url, timeout=VISIT_URL_TIMEOUT)
+        res = requests.get(url, timeout=VISIT_URL_TIMEOUT, headers=headers, cookies=cookies)
     except BaseException as e:
         add_log('url', 'url', e)
         return {}

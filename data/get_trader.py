@@ -17,7 +17,7 @@ def combination_data(coin_type, content):
     add_dict['name'] = coin_type
     add_dict['date'] = time.strftime('%Y-%m-%d')
     add_dict['time'] = time.strftime('%H:%M')
-    add_dict['timestamp'] = time.time() * 1000
+    add_dict['timestamp'] = int(time.time())
     add_dict['data'] = []
     for i in content['data']:
         add_dict['data'].append({
@@ -40,7 +40,7 @@ def get_trader(coin_type):
     get_trader_url = __init__.get_trader_url % (coin_type_dispose)
     get_trader_content = __init__.get_url(get_trader_url, 'get')
     if get_trader_content == {}:
-        __init__.add_log('data', 'get_trader', '实时成交数据获取失败', 0)
+        __init__.add_log('data', 'get_trader', '%s实时成交数据获取失败' % (coin_type), 0)
         return None
     # 组合数据
     add_dict = combination_data(coin_type, get_trader_content)
@@ -61,7 +61,7 @@ def get_trader_redis(coin_type, data):
     '''
     from config import redis_conn
     # 发布和存储
-    redis_conn.REDIS.publish('vb:trader:chan:mobei', str(data).encode())
+    redis_conn.REDIS.publish('vb:trader:chan:mobei', str(data).replace("'", '"').encode())
     redis_conn.REDIS.set('vb:trader:newitem:%s' % (coin_type), str(data).encode())
 
 

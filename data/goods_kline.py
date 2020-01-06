@@ -42,9 +42,10 @@ def add_sql(content, coin_type, period):
         period: 参数一，根据值获取对应表名
     '''
     content_time = time.localtime(content['data'][0]['id'])
-    add_sql = "insert into %s (code, period, volume, price, opening_price, closing_price, pre_closing_price, highest_price, lowest_price, date_ymd, date, create_time) value ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (
+    add_sql = "insert into %s (%s) value ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (
         table_name[period],
-        coin_type,
+        'code, period, volume, price, opening_price, closing_price, pre_closing_price, highest_price, lowest_price, date_ymd, date, create_time',
+        coin_type.replace('_', '/'),
         time.strftime("%Y%m%d", content_time),
         content['data'][0]['amount'],
         content['data'][0]['close'],
@@ -64,10 +65,8 @@ def add_sql(content, coin_type, period):
     except BaseException as e:
         __init__.add_log('kline', coin_type, e, 1)
         return
-    if add_res > 0:
-        __init__.add_log('kline', coin_type, '数据添加数据库完成', 1)
-    else:
-        __init__.add_log('kline', coin_type, '数据添加数据库失败', 1)
+    if add_res <= 0:
+        __init__.add_log('kline', coin_type, '%s%s数据添加数据库失败' % (coin_type, period), 1)
 
 
 def worker(coin_type, period):
@@ -78,12 +77,12 @@ def worker(coin_type, period):
     '''
     content = get_data(coin_type, period)
     if content == {}:
-        __init__.add_log('kline', coin_type, 'k线图数据获取失败', 1)
+        __init__.add_log('kline', coin_type, '%s%sk线图数据获取失败' % (coin_type, period), 1)
         return
     add_sql(content, coin_type, period)
 
 
-def timekeeping(coin_type):
+def timekeeping(coin_type, number):
     '''自定义计时器
     每执行一次休息0.1秒，当当前执行时间与上次执行时间相同时，跳过本轮执行
     Agrs:
@@ -104,51 +103,43 @@ def timekeeping(coin_type):
         new_day = '%s%s%s' % (new_hour, new_minute, new_second)
         new_week = new_time.tm_wday
         # 业务
-        if(new_second == 1):
+        if(new_second == number):
             # 一分钟线，每分钟的第一秒执行
-            __init__.add_log('kline', coin_type, '一分钟线：', 0)
             t = threading.Thread(target=worker, args=(coin_type, '1min', ))
             threads.append(t)
             t.start()
-        if(new_minute % 5 == 1 and new_second == 1):
+        if(new_minute % 5 == 1 and new_second == number):
             # 五分钟线，第六分钟的第一秒执行
-            __init__.add_log('kline', coin_type, '五分钟线：', 0)
             t = threading.Thread(target=worker, args=(coin_type, '5min', ))
             threads.append(t)
             t.start()
-        if(new_minute % 15 == 1 and new_second == 1):
+        if(new_minute % 15 == 1 and new_second == number):
             # 十五分钟线，第十六分钟的第一秒执行
-            __init__.add_log('kline', coin_type, '十五分钟线：', 0)
             t = threading.Thread(target=worker, args=(coin_type, '15min', ))
             threads.append(t)
             t.start()
-        if(new_minute % 30 == 1 and new_second == 1):
+        if(new_minute % 30 == 1 and new_second == number):
             # 三十分钟线，第三十一分钟的第一秒执行
-            __init__.add_log('kline', coin_type, '三十分钟线：', 0)
             t = threading.Thread(target=worker, args=(coin_type, '30min', ))
             threads.append(t)
             t.start()
-        if(new_minute % 15 == 0 and new_second == 1):
+        if(new_minute % 15 == 0 and new_second == number):
             # 小时线，每十五分钟更新一次
-            __init__.add_log('kline', coin_type, '小时线：', 0)
             t = threading.Thread(target=worker, args=(coin_type, '60min', ))
             threads.append(t)
             t.start()
-        if(new_minute == 0 and new_second == 1):
+        if(new_minute == 0 and new_second == number):
             # 日线，每小时更新一次
-            __init__.add_log('kline', coin_type, '日线：', 0)
             t = threading.Thread(target=worker, args=(coin_type, '1day', ))
             threads.append(t)
             t.start()
         if(new_day == '001'):
             # 周线，每天更新一次
-            __init__.add_log('kline', coin_type, '周线：', 0)
             t = threading.Thread(target=worker, args=(coin_type, '1week', ))
             threads.append(t)
             t.start()
         if(new_day == '001' and new_week == 0):
             # 月线，每周更新一次
-            __init__.add_log('kline', coin_type, '月线：', 0)
             t = threading.Thread(target=worker, args=(coin_type, '1mon', ))
             threads.append(t)
             t.start()

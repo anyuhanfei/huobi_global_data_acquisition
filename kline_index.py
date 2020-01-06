@@ -11,7 +11,8 @@ from data import goods_kline
 if __name__ == "__main__":
     jobs = []
     for coin_type in __init__.COIN_TYPE_KLINE:
-        child_process = multiprocessing.Process(target=goods_kline.timekeeping, args=(coin_type,))
+        number = (len(jobs) % len(__init__.COIN_TYPE_KLINE)) + 1
+        child_process = multiprocessing.Process(target=goods_kline.timekeeping, args=(coin_type, number,))
         child_process.daemon = True
         jobs.append(child_process)
         child_process.start()
