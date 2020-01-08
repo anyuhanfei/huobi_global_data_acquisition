@@ -41,6 +41,9 @@ MYSQL_CHARSET = 'utf8'
 '''visit url'''
 VISIT_URL_TIMEOUT = 10  # 访问网址超时时间
 
+'''get kline size'''
+GET_KLINE_SIZE = 7
+
 '''url'''
 get_ticker_url = 'https://api.huobipro.com/market/detail/merged?symbol=%s'
 get_usdt_cny_url = "https://www.hbg.com/-/x/general/exchange_rate/list?r=86xktl2lldf"
@@ -48,7 +51,7 @@ get_depth_url = 'https://api.huobipro.com/market/depth?symbol=%s&type=step0'
 get_trader_url = 'https://api.huobipro.com/market/history/trade?symbol=%s&size=50'
 get_depth_pct_url = 'https://api.huobipro.com/market/depth?symbol=%s&type=step0'
 get_new_price_url = 'https://api.huobipro.com/market/detail/merged?symbol=%s'
-goods_kline_url = 'https://api.huobipro.com/market/history/kline?period=%s&size=2&symbol=%s'
+goods_kline_url = 'https://api.huobipro.com/market/history/kline?period=%s&size=' + str(GET_KLINE_SIZE) + '&symbol=%s'
 
 
 """

@@ -47,13 +47,13 @@ def add_sql(content, coin_type, period):
         'code, period, volume, price, opening_price, closing_price, pre_closing_price, highest_price, lowest_price, date_ymd, date, create_time',
         coin_type.replace('_', '/'),
         time.strftime("%Y%m%d", content_time),
-        content['data'][0]['amount'],
-        content['data'][0]['close'],
-        content['data'][0]['open'],
-        content['data'][0]['close'],
+        content['data'][0]['amount'],  # 成交量
+        content['data'][0]['close'],  # 收盘价
+        content['data'][0]['open'],  # 开盘价
+        content['data'][0]['close'],  # 收盘价
         0,
-        content['data'][0]['high'],
-        content['data'][0]['low'],
+        content['data'][0]['high'],  # 最高价
+        content['data'][0]['low'],  # 最低价
         time.strftime("%Y%m%d", content_time),
         time.strftime("%Y-%m-%d %H:%M", content_time),
         time.strftime("%Y-%m-%d %H:%M:%S", content_time)
@@ -69,6 +69,55 @@ def add_sql(content, coin_type, period):
         __init__.add_log('kline', coin_type, '%s%s数据添加数据库失败' % (coin_type, period), 1)
 
 
+def update_sql(content, coin_type, period):
+    '''修改旧数据
+    总获取了5条数据，其中第一条为当前日期，其他均为旧数据，将旧数据更新或者将添加失败的旧数据也更新
+    '''
+    for i in range(1, __init__.GET_KLINE_SIZE):
+        select_sql = "select * from %s where  code='%s' and date='%s'" % (
+            table_name[period],
+            coin_type.replace('_', '/'),
+            time.strftime("%Y-%m-%d %H:%M", time.localtime(content['data'][i]['id']))
+        )
+        mysql_conn.MYSQL.ping(reconnect=True)
+        select_res = mysql_conn.CURSOR.execute(select_sql)
+        if select_res == 0:
+            content_time = time.localtime(content['data'][i]['id'])
+            update_sql = "insert into %s (%s) value ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (
+                table_name[period],
+                'code, period, volume, price, opening_price, closing_price, pre_closing_price, highest_price, lowest_price, date_ymd, date, create_time',
+                coin_type.replace('_', '/'),
+                time.strftime("%Y%m%d", content_time),
+                content['data'][i]['amount'],  # 成交量
+                content['data'][i]['close'],  # 收盘价
+                content['data'][i]['open'],  # 开盘价
+                content['data'][i]['close'],  # 收盘价
+                0,
+                content['data'][i]['high'],  # 最高价
+                content['data'][i]['low'],  # 最低价
+                time.strftime("%Y%m%d", content_time),
+                time.strftime("%Y-%m-%d %H:%M", content_time),
+                time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            )
+        else:
+            update_sql = "update %s set volume='%s',price='%s',opening_price='%s',closing_price='%s',highest_price='%s',lowest_price='%s',create_time='%s' where code='%s' and date='%s'" % (
+                table_name[period],
+                content['data'][i]['amount'],  # 成交量
+                content['data'][i]['close'],  # 收盘价
+                content['data'][i]['open'],  # 开盘价
+                content['data'][i]['close'],  # 收盘价
+                content['data'][i]['high'],  # 最高价
+                content['data'][i]['low'],  # 最低价
+                time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+                coin_type.replace('_', '/'),
+                time.strftime("%Y-%m-%d %H:%M", time.localtime(content['data'][i]['id']))
+            )
+        update_res = mysql_conn.CURSOR.execute(update_sql)
+        mysql_conn.MYSQL.commit()
+        if update_res <= 0:
+            __init__.add_log('kline', coin_type, '%s%s数据修改数据库失败' % (coin_type, period), 1)
+
+
 def worker(coin_type, period):
     '''子进程方法
     Agrs:
@@ -80,6 +129,7 @@ def worker(coin_type, period):
         __init__.add_log('kline', coin_type, '%s%sk线图数据获取失败' % (coin_type, period), 1)
         return
     add_sql(content, coin_type, period)
+    update_sql(content, coin_type, period)
 
 
 def timekeeping(coin_type, number):
