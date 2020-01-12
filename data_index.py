@@ -4,7 +4,7 @@
 import multiprocessing
 import time
 
-from data import get_usdt_cny
+from data import get_coin_cny
 from data import get_ticker
 from data import get_depth
 from data import get_trader
@@ -27,16 +27,16 @@ def get_data(coin_type):
         time.sleep(0 if execution_time > __init__.GET_DATA_INTERVAL_TIME else __init__.GET_DATA_INTERVAL_TIME - execution_time)
 
 
-def usdt_cny_get():
+def coin_cny_get():
     while True:
-        get_usdt_cny.get_usdt_cny()
+        get_coin_cny.get_coin_cny()
         time.sleep(0.4)
 
 
 if __name__ == '__main__':
     jobs = []
-    # 获取usdt兑换cny的比例
-    child_process = multiprocessing.Process(target=usdt_cny_get)
+    # 获取币种兑换cny的比例
+    child_process = multiprocessing.Process(target=coin_cny_get)
     child_process.daemon = True
     jobs.append(child_process)
     child_process.start()

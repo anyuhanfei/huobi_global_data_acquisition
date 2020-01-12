@@ -11,6 +11,7 @@ table_name = {
     '15min': 'goods_kline_min15_info',
     '30min': 'goods_kline_min30_info',
     '60min': 'goods_kline_min60_info',
+    '4hour': 'goods_kline_hour4_info',
     '1day': 'goods_kline_day1_info',
     '1week': 'goods_kline_week_info',
     '1mon': 'goods_kline_month_info'
@@ -176,6 +177,11 @@ def timekeeping(coin_type, number):
         if(new_minute % 15 == 0 and new_second == number):
             # 小时线，每十五分钟更新一次
             t = threading.Thread(target=worker, args=(coin_type, '60min', ))
+            threads.append(t)
+            t.start()
+        if(new_minute % 0 == 0 and new_second == number):
+            # 小时线，每十五分钟更新一次
+            t = threading.Thread(target=worker, args=(coin_type, '4hour', ))
             threads.append(t)
             t.start()
         if(new_minute == 0 and new_second == number):

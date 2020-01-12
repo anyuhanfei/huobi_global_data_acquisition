@@ -46,7 +46,7 @@ GET_KLINE_SIZE = 7
 
 '''url'''
 get_ticker_url = 'https://api.huobipro.com/market/detail/merged?symbol=%s'
-get_usdt_cny_url = "https://www.hbg.com/-/x/general/exchange_rate/list?r=86xktl2lldf"
+get_coin_cny_url = "https://www.hbg.com/-/x/general/exchange_rate/list?r=86xktl2lldf"
 get_depth_url = 'https://api.huobipro.com/market/depth?symbol=%s&type=step0'
 get_trader_url = 'https://api.huobipro.com/market/history/trade?symbol=%s&size=50'
 get_depth_pct_url = 'https://api.huobipro.com/market/depth?symbol=%s&type=step0'

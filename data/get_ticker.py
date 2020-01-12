@@ -3,13 +3,13 @@ import time
 import __init__
 
 
-def combination_data(coin_type, content, usdt_price):
+def combination_data(coin_type, content, cny_price):
     '''整合数据
     将已知数据整合成指定格式
     Agrs:
         coin_type: 币种
         content: 从接口中返回的数据，字典类型
-        usdt_price: 当前usdt兑换人民币的价格
+        cny_price: 当前币种兑换人民币的价格
     Return:
         dict 已整合的数据
     '''
@@ -20,7 +20,7 @@ def combination_data(coin_type, content, usdt_price):
         'time': time.strftime('%H:%M'),
         'timestamp': int(time.time()),
         'price': content['tick']['close'],
-        'cnyPrice': content['tick']['close'] * float(usdt_price.decode()),  # 这里是要获取usdt的价格
+        'cnyPrice': content['tick']['close'] * float(cny_price.decode()),  # 这里是要获取usdt的价格
         'open': content['tick']['open'],
         'close': content['tick']['close'],
         'high': content['tick']['high'],
@@ -65,9 +65,15 @@ def get_ticker_redis(coin_type, data):
     '''
     from config import redis_conn
 
+    coin = coin_type.split('/')
+    if coin[1] == 'USDT':
+        cny_price = redis_conn.REDIS['vb:indexTickerAll:usd2cny']
+    elif coin[1] == 'BTC':
+        cny_price = redis_conn.REDIS['vb:indexTickerAll:btc2cny']
+    else:
+        cny_price = redis_conn.REDIS['vb:indexTickerAll:usd2cny']
     # 组合数据
-    usdt_price = redis_conn.REDIS['vb:indexTickerAll:usd2cny']
-    add_dict = combination_data(coin_type, data, usdt_price)
+    add_dict = combination_data(coin_type, data, cny_price)
     # 发布和储存
     redis_conn.REDIS.publish('vb:ticker:chan:mobei', str(add_dict).replace("'", '"').encode())
     redis_conn.REDIS.set('vb:ticker:newitem:%s' % (coin_type), str(add_dict).encode())
