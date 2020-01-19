@@ -24,7 +24,6 @@ def get_coin_cny_redis(data):
 
     for i in data['data']:
         if i['name'] == 'usdt_cny':
-            print(i['rate'])
             redis_conn.REDIS.set('vb:indexTickerAll:usd2cny', i['rate'])
         if i['name'] == 'btc_cny':
             redis_conn.REDIS.set('vb:indexTickerAll:btc2cny', i['rate'])

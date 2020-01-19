@@ -1,4 +1,5 @@
 import time
+import json
 
 import __init__
 
@@ -20,7 +21,7 @@ def combination_data(coin_type, content, cny_price):
         'time': time.strftime('%H:%M'),
         'timestamp': int(time.time()),
         'price': content['tick']['close'],
-        'cnyPrice': content['tick']['close'] * float(cny_price.decode()),  # 这里是要获取usdt的价格
+        'cnyPrice': content['tick']['close'] * cny_price,  # 这里是要获取usdt的价格
         'open': content['tick']['open'],
         'close': content['tick']['close'],
         'high': content['tick']['high'],
@@ -67,11 +68,11 @@ def get_ticker_redis(coin_type, data):
 
     coin = coin_type.split('/')
     if coin[1] == 'USDT':
-        cny_price = redis_conn.REDIS['vb:indexTickerAll:usd2cny']
+        cny_price = float(redis_conn.REDIS['vb:indexTickerAll:usd2cny'].decode())
     elif coin[1] == 'BTC':
-        cny_price = redis_conn.REDIS['vb:indexTickerAll:btc2cny']
+        cny_price = float(redis_conn.REDIS['vb:indexTickerAll:btc2cny'].decode())
     else:
-        cny_price = redis_conn.REDIS['vb:indexTickerAll:usd2cny']
+        cny_price = json.loads(redis_conn.REDIS["vb:ticker:newitem:ETH/USDT"].decode().replace("\'", "\""))['cnyPrice']
     # 组合数据
     add_dict = combination_data(coin_type, data, cny_price)
     # 发布和储存

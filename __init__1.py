@@ -25,17 +25,17 @@ COIN_TYPE_KLINE = [
 DATABASE_TYPE = 'redis'  # redis or mysql
 
 '''redis set'''
-REDIS_HOST = '172.31.80.145'
+REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
 REDIS_AUTH = ''
-REDIS_PASSWROD = '08sfYeMPoaj61Nja'
+REDIS_PASSWROD = ''
 
 '''mysql set'''
-MYSQL_HOST = 'rm-j6cczhj6xrd54119t.mysql.rds.aliyuncs.com'
+MYSQL_HOST = '127.0.0.1'
 MYSQL_PORT = 3306
-MYSQL_USER = 'wanbi'
-MYSQL_PASSWORD = 'eplyQ18IutHCA356'
-MYSQL_DBNAME = 'wanbi_exchange'
+MYSQL_USER = 'root'
+MYSQL_PASSWORD = 'root'
+MYSQL_DBNAME = 'exchange_reptile'
 MYSQL_CHARSET = 'utf8'
 
 '''visit url'''
