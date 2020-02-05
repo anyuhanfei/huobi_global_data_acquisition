@@ -179,7 +179,7 @@ def timekeeping(coin_type, number):
             t = threading.Thread(target=worker, args=(coin_type, '60min', ))
             threads.append(t)
             t.start()
-        if(new_minute % 1 == 0 and new_second == number):
+        if(new_minute == 0 and new_second == number):
             # 4小时线，每小时更新一次
             t = threading.Thread(target=worker, args=(coin_type, '4hour', ))
             threads.append(t)
@@ -189,13 +189,13 @@ def timekeeping(coin_type, number):
             t = threading.Thread(target=worker, args=(coin_type, '1day', ))
             threads.append(t)
             t.start()
-        if(new_day == '001'):
-            # 周线，每天更新一次
+        if(new_minute == 0 and new_second == number):
+            # 周线，每小时更新一次
             t = threading.Thread(target=worker, args=(coin_type, '1week', ))
             threads.append(t)
             t.start()
-        if(new_day == '001' and new_week == 0):
-            # 月线，每周更新一次
+        if(new_minute == 0 and new_second == number):
+            # 月线，每小时更新一次
             t = threading.Thread(target=worker, args=(coin_type, '1mon', ))
             threads.append(t)
             t.start()
