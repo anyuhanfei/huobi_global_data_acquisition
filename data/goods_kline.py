@@ -125,10 +125,21 @@ def worker(coin_type, period):
         coin_type: 接口参数二
         period: 接口参数一
     '''
+    from config import redis_conn
+
     content = get_data(coin_type, period)
     if content == {}:
         __init__.add_log('kline', coin_type, '%s%sk线图数据获取失败' % (coin_type, period), 1)
         return
+    try:
+        风控_number = float(redis_conn.REDIS['%s%s' % (__init__.风控_KEY, coin_type)].decode()) if (__init__.使用风控 is True) else 0
+    except BaseException:
+        风控_number = 0
+    for i in range(0, len(content['data']) - 1):
+        content['data'][i]['open'] += 风控_number
+        content['data'][i]['close'] += 风控_number
+        content['data'][i]['high'] += 风控_number
+        content['data'][i]['low'] += 风控_number
     add_sql(content, coin_type, period)
     update_sql(content, coin_type, period)
 
@@ -148,11 +159,8 @@ def timekeeping(coin_type, number):
             continue
         old_time = new_time
         # 获取时间
-        new_hour = new_time.tm_hour
         new_minute = new_time.tm_min
         new_second = new_time.tm_sec
-        new_day = '%s%s%s' % (new_hour, new_minute, new_second)
-        new_week = new_time.tm_wday
         # 业务
         if(new_second == number):
             # 一分钟线，每分钟的第一秒执行

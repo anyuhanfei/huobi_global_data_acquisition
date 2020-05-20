@@ -30,8 +30,12 @@ def get_new_price_redis(coin_type, data):
         data: 已整理数据，字典类型
     '''
     from config import redis_conn
+    try:
+        风控_number = float(redis_conn.REDIS['%s%s' % (__init__.风控_KEY, coin_type)].decode()) if (__init__.使用风控 is False) else 0
+    except BaseException:
+        风控_number = 0
     # 存储
-    redis_conn.REDIS.set('vb:ticker:newprice:%s' % (coin_type), data['tick']['close'])
+    redis_conn.REDIS.set('vb:ticker:newprice:%s' % (coin_type), data['tick']['close'] + 风控_number)
 
 
 def get_new_price_mysql(data):

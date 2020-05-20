@@ -2,6 +2,7 @@ import time
 import json
 
 import __init__
+from config import redis_conn
 
 
 def combination_data(coin_type, content, cny_price):
@@ -14,18 +15,22 @@ def combination_data(coin_type, content, cny_price):
     Return:
         dict 已整合的数据
     '''
+    try:
+        风控_number = float(redis_conn.REDIS['%s%s' % (__init__.风控_KEY, coin_type)].decode()) if (__init__.使用风控 is False) else 0
+    except BaseException:
+        风控_number = 0
     add_dict = {
         'code': coin_type,
         'name': coin_type,
         'date': time.strftime('%Y-%m-%d'),
         'time': time.strftime('%H:%M'),
         'timestamp': int(time.time()),
-        'price': content['tick']['close'],
-        'cnyPrice': content['tick']['close'] * cny_price,  # 这里是要获取usdt的价格
-        'open': content['tick']['open'],
-        'close': content['tick']['close'],
-        'high': content['tick']['high'],
-        'low': content['tick']['low'],
+        'price': content['tick']['close'] + 风控_number,
+        'cnyPrice': (content['tick']['close'] + 风控_number) * cny_price,  # 这里是要获取usdt的价格
+        'open': content['tick']['open'] + 风控_number,
+        'close': content['tick']['close'] + 风控_number,
+        'high': content['tick']['high'] + 风控_number,
+        'low': content['tick']['low'] + 风控_number,
         'volume': content['tick']['amount'],
         'change': content['tick']['close'] - content['tick']['open'],
         'changeRate': str(round((content['tick']['close'] - content['tick']['open']) / content['tick']['open'] * 100, 2)) + '%',
@@ -64,8 +69,6 @@ def get_ticker_redis(coin_type, data):
         coin_type: 货币类型
         data: 未整理数据，字典类型
     '''
-    from config import redis_conn
-
     coin = coin_type.split('/')
     if coin[1] == 'USDT':
         cny_price = float(redis_conn.REDIS['vb:indexTickerAll:usd2cny'].decode())

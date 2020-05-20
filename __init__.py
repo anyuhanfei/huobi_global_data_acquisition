@@ -7,7 +7,7 @@ import os
 系统全局配置
 """
 '''get data interval time'''
-GET_DATA_INTERVAL_TIME = 1
+GET_DATA_INTERVAL_TIME = 5
 
 
 '''coin type'''
@@ -31,11 +31,11 @@ REDIS_AUTH = ''
 REDIS_PASSWROD = ''
 
 '''mysql set'''
-MYSQL_HOST = 'rm-j6cczhj6xrd54119t.mysql.rds.aliyuncs.com'
+MYSQL_HOST = '127.0.0.1'
 MYSQL_PORT = 3306
-MYSQL_USER = 'wanbi'
-MYSQL_PASSWORD = 'eplyQ18IutHCA356'
-MYSQL_DBNAME = 'wanbi_exchange'
+MYSQL_USER = 'root'
+MYSQL_PASSWORD = 'root'
+MYSQL_DBNAME = 'k'
 MYSQL_CHARSET = 'utf8'
 
 '''visit url'''
@@ -52,6 +52,10 @@ get_trader_url = 'https://api.huobipro.com/market/history/trade?symbol=%s&size=5
 get_depth_pct_url = 'https://api.huobipro.com/market/depth?symbol=%s&type=step0'
 get_new_price_url = 'https://api.huobipro.com/market/detail/merged?symbol=%s'
 goods_kline_url = 'https://api.huobipro.com/market/history/kline?period=%s&size=' + str(GET_KLINE_SIZE) + '&symbol=%s'
+
+'''风控'''
+使用风控 = True
+风控_KEY = 'vb:risk:management:'  # 例: vb:risk:management:GOLD/USDT
 
 
 """
