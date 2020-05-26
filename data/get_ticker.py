@@ -16,7 +16,7 @@ def combination_data(coin_type, content, cny_price):
         dict 已整合的数据
     '''
     try:
-        风控_number = float(redis_conn.REDIS['%s%s' % (__init__.风控_KEY, coin_type)].decode()) if (__init__.使用风控 is False) else 0
+        风控_number = float(redis_conn.REDIS['%s%s' % (__init__.风控_KEY, coin_type)].decode()) if (__init__.使用风控 is True) else 0
     except BaseException:
         风控_number = 0
     add_dict = {
@@ -33,7 +33,7 @@ def combination_data(coin_type, content, cny_price):
         'low': content['tick']['low'] + 风控_number,
         'volume': content['tick']['amount'],
         'change': content['tick']['close'] - content['tick']['open'],
-        'changeRate': str(round((content['tick']['close'] - content['tick']['open']) / content['tick']['open'] * 100, 2)) + '%',
+        'changeRate': str(round((content['tick']['close'] - content['tick']['open']) / (content['tick']['open'] * 100), 2)) + '%',
         'buy': content['tick']['bid'][0],
         'sell': content['tick']['ask'][0]
     }

@@ -31,7 +31,7 @@ def get_new_price_redis(coin_type, data):
     '''
     from config import redis_conn
     try:
-        风控_number = float(redis_conn.REDIS['%s%s' % (__init__.风控_KEY, coin_type)].decode()) if (__init__.使用风控 is False) else 0
+        风控_number = float(redis_conn.REDIS['%s%s' % (__init__.风控_KEY, coin_type)].decode()) if (__init__.使用风控 is True) else 0
     except BaseException:
         风控_number = 0
     # 存储
