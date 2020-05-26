@@ -12,6 +12,8 @@ def combination_data(coin_type, content):
     Return:
         dict 已整合的数据
     '''
+    from config import redis_conn
+
     add_dict = {}
     add_dict['code'] = coin_type
     add_dict['name'] = coin_type
@@ -19,16 +21,20 @@ def combination_data(coin_type, content):
     add_dict['time'] = time.strftime('%H:%M')
     add_dict['timestamp'] = int(time.time())
     add_dict['bids'] = []
+    try:
+        风控_number = float(redis_conn.REDIS['%s%s' % (__init__.风控_KEY, coin_type)].decode()) if (__init__.使用风控 is True) else 0
+    except BaseException:
+        风控_number = 0
     for i in range(0, 20 if len(content['tick']['bids']) >= 20 else len(content['tick']['bids'])):
         add_dict['bids'].append({
             'totalSize': content['tick']['bids'][i][1],
-            'price': content['tick']['bids'][i][0]
+            'price': round(content['tick']['bids'][i][0] + 风控_number, 2)
         })
     add_dict['asks'] = []
     for i in range(0, 20 if len(content['tick']['asks']) >= 20 else len(content['tick']['asks'])):
         add_dict['asks'].append({
             'totalSize': content['tick']['asks'][i][1],
-            'price': content['tick']['asks'][i][0]
+            'price': round(content['tick']['bids'][i][0] + 风控_number, 2)
         })
     return add_dict
 
