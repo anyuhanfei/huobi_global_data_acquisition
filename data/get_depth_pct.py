@@ -55,7 +55,7 @@ def get_depth_pct(coin_type):
     get_depth_pct_url = __init__.get_depth_pct_url % (coin_type_dispose)
     get_depth_pct_content = __init__.get_url(get_depth_pct_url, 'get')
     if get_depth_pct_content == {}:
-        __init__.add_log('data', 'get_depth_pct', '深度图数据获取失败', 0)
+        print('获取深度图数据:%s深度图数据获取失败' % (coin_type))
         return None
     # 组合数据
     add_dict = combination_data(coin_type, get_depth_pct_content)
@@ -65,7 +65,7 @@ def get_depth_pct(coin_type):
     elif __init__.DATABASE_TYPE == 'mysql':
         add_data_mysql(add_dict)
     else:
-        __init__.add_log('data', 'get_depth_pct', '数据存储类型错误', 0)
+        print('获取深度图数据:数据存储类型错误')
 
 
 def add_data_redis(add_data):

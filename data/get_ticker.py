@@ -51,7 +51,7 @@ def get_ticker(coin_type):
     get_ricker_url = __init__.get_ticker_url % (coin_type_dispose)
     get_ricker_content = __init__.get_url(get_ricker_url, 'get')
     if get_ricker_content == {}:
-        __init__.add_log('data', 'get_ticker', '实时行情获取失败', 0)
+        print('实时行情获取:%s实时行情获取失败' % (coin_type))
         return None
     # 储存和发布
     if __init__.DATABASE_TYPE == 'redis':
@@ -59,7 +59,7 @@ def get_ticker(coin_type):
     elif __init__.DATABASE_TYPE == 'mysql':
         get_ticker_mysql(get_ricker_content)
     else:
-        __init__.add_log('data', 'get_ticker', '数据存储类型错误', 0)
+        print('实时行情获取:数据存储类型错误')
 
 
 def get_ticker_redis(coin_type, data):

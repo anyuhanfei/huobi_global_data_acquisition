@@ -1,7 +1,6 @@
 import requests
 import json
-import time
-import os
+
 
 """
 系统全局配置
@@ -76,40 +75,9 @@ def get_url(url, http_type, headers='', cookies=''):
     try:
         res = requests.get(url, timeout=VISIT_URL_TIMEOUT, headers=headers, cookies=cookies)
     except BaseException as e:
-        add_log('url', 'url', e)
+        print('url:%s:%s' % (url, e))
         return {}
     if res.status_code == 200:
         return json.loads(res.content.decode())
     else:
         return {}
-
-
-def add_log(type, coin_type, content, level=0):
-    '''添加日志记录
-    每天的日志单独记录，存放在当前月份命名的目录下
-    Agrs:
-        type: 日志类型
-        content: 日志内容
-        level: 日志层级，0表示顶级，每增加一级多4个空格
-    '''
-    # 获取需要用到的时间
-    new_time = time.strftime("%Y-%m-%d %H:%M:%S")
-    new_month = time.strftime("%Y-%m")
-    new_day = time.strftime("%Y-%m-%d")
-    # 一级目录的检测与创建
-    log_dir_name = 'log/%s' % (type)
-    if not os.path.exists(log_dir_name):
-        os.makedirs(log_dir_name)
-    # 二级目录的检测与创建
-    log_dir_name = 'log/%s/%s' % (type, coin_type)
-    if not os.path.exists(log_dir_name):
-        os.makedirs(log_dir_name)
-    # 三级目录的检测与创建
-    log_dir_name = 'log/%s/%s/%s' % (type, coin_type, new_month)
-    if not os.path.exists(log_dir_name):
-        os.makedirs(log_dir_name)
-    # 文件写入
-    res_content = '%s%s  (%s)\n' % ('    ' * level, content, new_time)
-    log_file_name = '%s/%s.log' % (log_dir_name, new_day)
-    with open(log_file_name, 'a+', encoding='utf-8') as f:
-        f.write(res_content)

@@ -12,7 +12,7 @@ def get_new_price(coin_type):
     get_new_price_url = __init__.get_new_price_url % (coin_type_dispose)
     get_new_price_content = __init__.get_url(get_new_price_url, 'get')
     if get_new_price_content == {}:
-        __init__.add_log('data', 'get_new', '最新价格获取失败', 0)
+        print('获取最新价格:%s最新价格获取失败' % (coin_type))
         return None
     # 储存和发布
     if __init__.DATABASE_TYPE == 'redis':
@@ -20,7 +20,7 @@ def get_new_price(coin_type):
     elif __init__.DATABASE_TYPE == 'mysql':
         get_new_price_mysql(get_new_price_content)
     else:
-        __init__.add_log('data', 'get_new', '数据存储类型错误', 0)
+        print('获取最新价格:数据存储类型错误')
 
 
 def get_new_price_redis(coin_type, data):

@@ -40,7 +40,7 @@ def get_trader(coin_type):
     get_trader_url = __init__.get_trader_url % (coin_type_dispose)
     get_trader_content = __init__.get_url(get_trader_url, 'get')
     if get_trader_content == {}:
-        __init__.add_log('data', 'get_trader', '%s实时成交数据获取失败' % (coin_type), 0)
+        print('获取实时成交数据:%s实时成交数据获取失败' % (coin_type))
         return None
     # 组合数据
     add_dict = combination_data(coin_type, get_trader_content)
@@ -50,7 +50,7 @@ def get_trader(coin_type):
     elif __init__.DATABASE_TYPE == 'mysql':
         get_trader_mysql(add_dict)
     else:
-        __init__.add_log('data', 'get_trader', '数据存储类型错误', 0)
+        print('获取实时成交数据:数据存储类型错误')
 
 
 def get_trader_redis(coin_type, data):

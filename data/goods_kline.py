@@ -67,7 +67,7 @@ def add_sql(content, coin_type, period):
         __init__.add_log('kline', coin_type, e, 1)
         return
     if add_res <= 0:
-        __init__.add_log('kline', coin_type, '%s%s数据添加数据库失败' % (coin_type, period), 1)
+        print('K线图:%s%s数据添加数据库失败' % (coin_type, period))
 
 
 def update_sql(content, coin_type, period):
@@ -116,7 +116,7 @@ def update_sql(content, coin_type, period):
         update_res = mysql_conn.CURSOR.execute(update_sql)
         mysql_conn.MYSQL.commit()
         if update_res <= 0:
-            __init__.add_log('kline', coin_type, '%s%s数据修改数据库失败' % (coin_type, period), 1)
+            print('K线图:%s%s数据修改数据库失败' % (coin_type, period))
 
 
 def worker(coin_type, period):
@@ -129,7 +129,7 @@ def worker(coin_type, period):
 
     content = get_data(coin_type, period)
     if content == {}:
-        __init__.add_log('kline', coin_type, '%s%sk线图数据获取失败' % (coin_type, period), 1)
+        print('K线图:%s%sk线图数据获取失败' % (coin_type, period))
         return
     try:
         风控_number = float(redis_conn.REDIS['%s%s' % (__init__.风控_KEY, coin_type)].decode()) if (__init__.使用风控 is True) else 0
