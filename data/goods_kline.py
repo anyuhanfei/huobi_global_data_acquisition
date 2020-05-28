@@ -64,7 +64,7 @@ def add_sql(content, coin_type, period):
         add_res = mysql_conn.CURSOR.execute(add_sql)
         mysql_conn.MYSQL.commit()
     except BaseException as e:
-        __init__.add_log('kline', coin_type, e, 1)
+        print('K线图:%s数据添加数据库失败. 原因为:%s' % (coin_type, e))
         return
     if add_res <= 0:
         print('K线图:%s%s数据添加数据库失败' % (coin_type, period))
