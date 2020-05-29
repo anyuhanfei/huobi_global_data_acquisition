@@ -28,7 +28,7 @@ def combination_data(coin_type, content):
     except BaseException:
         风控_number = 0
     for i in range(0, 200 if len(content['tick']['bids']) >= 200 else len(content['tick']['bids'])):
-        bids += math.ceil(content['tick']['bids'][i][1])
+        bids += round(content['tick']['bids'][i][1], 2)
         add_dict['bids'].append({
             'totalSize': bids,
             'price': round(content['tick']['bids'][i][0] + 风控_number, 2)
@@ -36,10 +36,10 @@ def combination_data(coin_type, content):
     add_dict['asks'] = []
     asks = 0
     for i in range(0, 200 if len(content['tick']['asks']) >= 200 else len(content['tick']['asks'])):
-        asks += math.ceil(content['tick']['asks'][i][1])
+        asks += round(content['tick']['asks'][i][1], 2)
         add_dict['asks'].append({
             'totalSize': asks,
-            'price': round(content['tick']['bids'][i][0] + 风控_number, 2)
+            'price': round(content['tick']['asks'][i][0] + 风控_number, 2)
         })
     return add_dict
 

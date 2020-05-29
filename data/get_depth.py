@@ -34,7 +34,7 @@ def combination_data(coin_type, content):
     for i in range(0, 20 if len(content['tick']['asks']) >= 20 else len(content['tick']['asks'])):
         add_dict['asks'].append({
             'totalSize': content['tick']['asks'][i][1],
-            'price': round(content['tick']['bids'][i][0] + 风控_number, 2)
+            'price': round(content['tick']['asks'][i][0] + 风控_number, 2)
         })
     return add_dict
 
