@@ -57,14 +57,14 @@ def get_depth(coin_type):
     add_dict = combination_data(coin_type, get_depth_content)
     # 储存和发布
     if __init__.DATABASE_TYPE == 'redis':
-        add_data_redis(add_dict)
+        add_data_redis(coin_type, add_dict)
     elif __init__.DATABASE_TYPE == 'mysql':
-        add_data_mysql(add_dict)
+        add_data_mysql(coin_type, add_dict)
     else:
         print('获取盘口数据:数据存储类型错误')
 
 
-def add_data_redis(add_data):
+def add_data_redis(coin_type, add_data):
     '''将数据存储到redis
     数据转换为json字符串，然后分别添加到通道和存储中
     Agrs:
@@ -72,9 +72,10 @@ def add_data_redis(add_data):
     '''
     from config import redis_conn
     res_add_data = str(add_data).replace("'", '"').encode()
-    redis_conn.REDIS.publish('vb:depth:chan:mobei', res_add_data)
-    redis_conn.REDIS.set('vb:depth:newitem:', res_add_data)
+    if res_add_data:
+        redis_conn.REDIS.publish('vb:depth:chan:mobei', res_add_data)
+        redis_conn.REDIS.set('vb:depth:newitem:%s' % (coin_type), res_add_data)
 
 
-def add_data_mysql(add_data):
+def add_data_mysql(coin_type, add_data):
     pass

@@ -33,7 +33,7 @@ def combination_data(coin_type, content, cny_price):
         'low': content['tick']['low'] + 风控_number,
         'volume': content['tick']['amount'],
         'change': content['tick']['close'] - content['tick']['open'],
-        'changeRate': str(round((content['tick']['close'] - content['tick']['open']) / (content['tick']['open'] * 100), 2)) + '%',
+        'changeRate': str(round((content['tick']['close'] - content['tick']['open']) / content['tick']['open'] * 100, 2)) + '%',
         'buy': content['tick']['bid'][0],
         'sell': content['tick']['ask'][0]
     }
