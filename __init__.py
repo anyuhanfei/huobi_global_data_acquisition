@@ -8,17 +8,17 @@ import json
 '''get data interval time'''
 GET_DATA_INTERVAL_TIME = 1
 
-
 '''coin type'''
-COIN_TYPE = [
-    'BTC/USDT', 'ETH/USDT', 'XRP/USDT', 'LTC/USDT', 'BCH/USDT', 'EOS/USDT', 'EOS/ETH', 'ADA/ETH', 'OMG/ETH',
-    'LTC/BTC', 'BCH/BTC', 'ETH/BTC', 'EOS/BTC', 'XRP/BTC', 'ETC/BTC'
-]
+COIN_USDT = ['BTC/USDT', 'ETH/USDT', 'XRP/USDT', 'LTC/USDT', 'BCH/USDT', 'EOS/USDT']  # USDT相关币种对
+COIN_ETH = ['EOS/ETH', 'ADA/ETH', 'OMG/ETH']  # ETH相关币种对
+COIN_BTC = ['LTC/BTC', 'BCH/BTC', 'ETH/BTC', 'EOS/BTC', 'XRP/BTC', 'ETC/BTC']  # BTC相关币种对
 
-COIN_TYPE_KLINE = [
-    'BTC_USDT', 'ETH_USDT', 'XRP_USDT', 'LTC_USDT', 'BCH_USDT', 'EOS_USDT', 'EOS_ETH', 'ADA_ETH', 'OMG_ETH',
-    'LTC_BTC', 'BCH_BTC', 'ETH_BTC', 'EOS_BTC', 'XRP_BTC', 'ETC_BTC'
-]
+# 设置使用的币种对
+COIN_TYPE = COIN_USDT + COIN_ETH + COIN_BTC
+COIN_TYPE_KLINE = COIN_USDT + COIN_ETH + COIN_BTC
+
+for i in range(0, len(COIN_TYPE) - 1):
+    COIN_TYPE_KLINE[i] = COIN_TYPE[i].replace('/', '_')
 
 '''use database type'''
 DATABASE_TYPE = 'redis'  # redis or mysql
