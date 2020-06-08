@@ -6,7 +6,7 @@ import json
 系统全局配置
 """
 '''get data interval time'''
-GET_DATA_INTERVAL_TIME = 5
+GET_DATA_INTERVAL_TIME = 1
 
 
 '''coin type'''

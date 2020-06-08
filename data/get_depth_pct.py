@@ -1,5 +1,4 @@
 import time
-import math
 
 import __init__
 

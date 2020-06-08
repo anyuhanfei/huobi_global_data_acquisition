@@ -2,7 +2,8 @@ import time
 import threading
 
 import __init__
-from config import mysql_conn
+from config.mysql_conn import sqlLink
+
 
 # 周期对应的表名
 table_name = {
@@ -35,7 +36,7 @@ def get_data(coin_type, period):
     return get_data_content
 
 
-def add_sql(content, coin_type, period):
+def add_sql(content, coin_type, period, mysql_server):
     '''添加数据
     Agrs:
         content: 接口返回数据
@@ -60,9 +61,13 @@ def add_sql(content, coin_type, period):
         time.strftime("%Y-%m-%d %H:%M:%S", content_time)
     )
     try:
-        mysql_conn.MYSQL.ping(reconnect=True)
-        add_res = mysql_conn.CURSOR.execute(add_sql)
-        mysql_conn.MYSQL.commit()
+        mysql_server.MYSQL.ping(reconnect=True)
+    except BaseException as e:
+        print(e)
+        mysql_server = sqlLink()
+    try:
+        add_res = mysql_server.CURSOR.execute(add_sql)
+        mysql_server.MYSQL.commit()
     except BaseException as e:
         print('K线图:%s数据添加数据库失败. 原因为:%s' % (coin_type, e))
         return
@@ -70,7 +75,7 @@ def add_sql(content, coin_type, period):
         print('K线图:%s%s数据添加数据库失败' % (coin_type, period))
 
 
-def update_sql(content, coin_type, period):
+def update_sql(content, coin_type, period, mysql_server):
     '''修改旧数据
     总获取了5条数据，其中第一条为当前日期，其他均为旧数据，将旧数据更新或者将添加失败的旧数据也更新
     '''
@@ -80,8 +85,12 @@ def update_sql(content, coin_type, period):
             coin_type.replace('_', '/'),
             time.strftime("%Y-%m-%d %H:%M", time.localtime(content['data'][i]['id']))
         )
-        mysql_conn.MYSQL.ping(reconnect=True)
-        select_res = mysql_conn.CURSOR.execute(select_sql)
+        try:
+            mysql_server.MYSQL.ping(reconnect=True)
+        except BaseException as e:
+            print(e)
+            mysql_server = sqlLink()
+        select_res = mysql_server.CURSOR.execute(select_sql)
         if select_res == 0:
             content_time = time.localtime(content['data'][i]['id'])
             update_sql = "insert into %s (%s) value ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (
@@ -113,17 +122,18 @@ def update_sql(content, coin_type, period):
                 coin_type.replace('_', '/'),
                 time.strftime("%Y-%m-%d %H:%M", time.localtime(content['data'][i]['id']))
             )
-        update_res = mysql_conn.CURSOR.execute(update_sql)
-        mysql_conn.MYSQL.commit()
+        update_res = mysql_server.CURSOR.execute(update_sql)
+        mysql_server.MYSQL.commit()
         if update_res <= 0:
             print('K线图:%s%s数据修改数据库失败' % (coin_type, period))
 
 
-def worker(coin_type, period):
+def worker(coin_type, period, mysql_server):
     '''子进程方法
     Agrs:
         coin_type: 接口参数二
         period: 接口参数一
+        mysql_server: mysql连接对象
     '''
     from config import redis_conn
 
@@ -140,8 +150,8 @@ def worker(coin_type, period):
         content['data'][i]['close'] += 风控_number
         content['data'][i]['high'] += 风控_number
         content['data'][i]['low'] += 风控_number
-    add_sql(content, coin_type, period)
-    update_sql(content, coin_type, period)
+    add_sql(content, coin_type, period, mysql_server)
+    update_sql(content, coin_type, period, mysql_server)
 
 
 def timekeeping(coin_type, number):
@@ -150,6 +160,7 @@ def timekeeping(coin_type, number):
     Agrs:
         coin_type: 币种类型
     '''
+    mysql_server = sqlLink()
     old_time = ''
     while True:
         # 防止代码执行时间过长，进行一次新旧时间判断，保证每秒仅执行一次
@@ -164,47 +175,47 @@ def timekeeping(coin_type, number):
         # 业务
         if(new_second == number):
             # 一分钟线，每分钟的第一秒执行
-            t = threading.Thread(target=worker, args=(coin_type, '1min', ))
+            t = threading.Thread(target=worker, args=(coin_type, '1min', mysql_server))
             threads.append(t)
             t.start()
         if(new_minute % 5 == 1 and new_second == number):
             # 五分钟线，第六分钟的第一秒执行
-            t = threading.Thread(target=worker, args=(coin_type, '5min', ))
+            t = threading.Thread(target=worker, args=(coin_type, '5min', mysql_server))
             threads.append(t)
             t.start()
         if(new_minute % 15 == 1 and new_second == number):
             # 十五分钟线，第十六分钟的第一秒执行
-            t = threading.Thread(target=worker, args=(coin_type, '15min', ))
+            t = threading.Thread(target=worker, args=(coin_type, '15min', mysql_server))
             threads.append(t)
             t.start()
         if(new_minute % 30 == 1 and new_second == number):
             # 三十分钟线，第三十一分钟的第一秒执行
-            t = threading.Thread(target=worker, args=(coin_type, '30min', ))
+            t = threading.Thread(target=worker, args=(coin_type, '30min', mysql_server))
             threads.append(t)
             t.start()
         if(new_minute % 15 == 0 and new_second == number):
             # 小时线，每十五分钟更新一次
-            t = threading.Thread(target=worker, args=(coin_type, '60min', ))
+            t = threading.Thread(target=worker, args=(coin_type, '60min', mysql_server))
             threads.append(t)
             t.start()
         if(new_minute == 0 and new_second == number):
             # 4小时线，每小时更新一次
-            t = threading.Thread(target=worker, args=(coin_type, '4hour', ))
+            t = threading.Thread(target=worker, args=(coin_type, '4hour', mysql_server))
             threads.append(t)
             t.start()
         if(new_minute == 0 and new_second == number):
             # 日线，每小时更新一次
-            t = threading.Thread(target=worker, args=(coin_type, '1day', ))
+            t = threading.Thread(target=worker, args=(coin_type, '1day', mysql_server))
             threads.append(t)
             t.start()
         if(new_minute == 0 and new_second == number):
             # 周线，每小时更新一次
-            t = threading.Thread(target=worker, args=(coin_type, '1week', ))
+            t = threading.Thread(target=worker, args=(coin_type, '1week', mysql_server))
             threads.append(t)
             t.start()
         if(new_minute == 0 and new_second == number):
             # 月线，每小时更新一次
-            t = threading.Thread(target=worker, args=(coin_type, '1mon', ))
+            t = threading.Thread(target=worker, args=(coin_type, '1mon', mysql_server))
             threads.append(t)
             t.start()
         time.sleep(0.1)
