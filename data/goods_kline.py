@@ -2,8 +2,6 @@ import time
 import threading
 
 import __init__
-from config.mysql_conn import sqlLink
-
 
 # 周期对应的表名
 table_name = {
@@ -61,13 +59,7 @@ def add_sql(content, coin_type, period, mysql_server):
         time.strftime("%Y-%m-%d %H:%M:%S", content_time)
     )
     try:
-        mysql_server.MYSQL.ping(reconnect=True)
-    except BaseException as e:
-        print(e)
-        mysql_server = sqlLink()
-    try:
-        add_res = mysql_server.CURSOR.execute(add_sql)
-        mysql_server.MYSQL.commit()
+        add_res = mysql_server.my_execute(add_sql)
     except BaseException as e:
         print('K线图:%s数据添加数据库失败. 原因为:%s' % (coin_type, e))
         return
@@ -79,18 +71,13 @@ def update_sql(content, coin_type, period, mysql_server):
     '''修改旧数据
     总获取了5条数据，其中第一条为当前日期，其他均为旧数据，将旧数据更新或者将添加失败的旧数据也更新
     '''
-    for i in range(1, __init__.GET_KLINE_SIZE):
+    for i in range(1, __init__.GET_KLINE_SIZE - 1):
         select_sql = "select * from %s where  code='%s' and date='%s'" % (
             table_name[period],
             coin_type.replace('_', '/'),
             time.strftime("%Y-%m-%d %H:%M", time.localtime(content['data'][i]['id']))
         )
-        try:
-            mysql_server.MYSQL.ping(reconnect=True)
-        except BaseException as e:
-            print(e)
-            mysql_server = sqlLink()
-        select_res = mysql_server.CURSOR.execute(select_sql)
+        select_res = mysql_server.my_execute(select_sql)
         if select_res == 0:
             content_time = time.localtime(content['data'][i]['id'])
             update_sql = "insert into %s (%s) value ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (
@@ -122,8 +109,7 @@ def update_sql(content, coin_type, period, mysql_server):
                 coin_type.replace('_', '/'),
                 time.strftime("%Y-%m-%d %H:%M", time.localtime(content['data'][i]['id']))
             )
-        update_res = mysql_server.CURSOR.execute(update_sql)
-        mysql_server.MYSQL.commit()
+        update_res = mysql_server.my_execute(update_sql)
         if update_res <= 0:
             print('K线图:%s%s数据修改数据库失败' % (coin_type, period))
 
@@ -154,13 +140,12 @@ def worker(coin_type, period, mysql_server):
     update_sql(content, coin_type, period, mysql_server)
 
 
-def timekeeping(coin_type, number):
+def timekeeping(coin_type, number, mysql_server):
     '''自定义计时器
     每执行一次休息0.1秒，当当前执行时间与上次执行时间相同时，跳过本轮执行
     Agrs:
         coin_type: 币种类型
     '''
-    mysql_server = sqlLink()
     old_time = ''
     while True:
         # 防止代码执行时间过长，进行一次新旧时间判断，保证每秒仅执行一次

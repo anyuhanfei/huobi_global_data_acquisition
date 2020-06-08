@@ -6,13 +6,14 @@ import time
 
 import __init__
 from data import goods_kline
+from config.mysql_conn import sqlLink
 
 
 if __name__ == "__main__":
     jobs = []
     for coin_type in __init__.COIN_TYPE_KLINE:
         number = (len(jobs) % len(__init__.COIN_TYPE_KLINE)) + 1
-        child_process = multiprocessing.Process(target=goods_kline.timekeeping, args=(coin_type, number,))
+        child_process = multiprocessing.Process(target=goods_kline.timekeeping, args=(coin_type, number, sqlLink()))
         child_process.daemon = True
         jobs.append(child_process)
         child_process.start()
