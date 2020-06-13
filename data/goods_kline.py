@@ -41,30 +41,37 @@ def add_sql(content, coin_type, period, mysql_server):
         coin_type: 参数二，保存数据
         period: 参数一，根据值获取对应表名
     '''
-    content_time = time.localtime(content['data'][0]['id'])
-    add_sql = "insert into %s (%s) value ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (
+    select_sql = "select * from %s where  code='%s' and date='%s'" % (
         table_name[period],
-        'code, period, volume, price, opening_price, closing_price, pre_closing_price, highest_price, lowest_price, date_ymd, date, create_time',
         coin_type.replace('_', '/'),
-        time.strftime("%Y%m%d", content_time),
-        content['data'][0]['amount'],  # 成交量
-        content['data'][0]['close'],  # 收盘价
-        content['data'][0]['open'],  # 开盘价
-        content['data'][0]['close'],  # 收盘价
-        0,
-        content['data'][0]['high'],  # 最高价
-        content['data'][0]['low'],  # 最低价
-        time.strftime("%Y%m%d", content_time),
-        time.strftime("%Y-%m-%d %H:%M", content_time),
-        time.strftime("%Y-%m-%d %H:%M:%S", content_time)
+        time.strftime("%Y-%m-%d %H:%M", time.localtime(content['data'][0]['id']))
     )
-    try:
-        add_res = mysql_server.my_execute(add_sql)
-    except BaseException as e:
-        print('K线图:%s数据添加数据库失败. 原因为:%s' % (coin_type, e))
-        return
-    if add_res <= 0:
-        print('K线图:%s%s数据添加数据库失败' % (coin_type, period))
+    select_res = mysql_server.my_execute(select_sql)
+    if select_res == 0:
+        content_time = time.localtime(content['data'][0]['id'])
+        add_sql = "insert into %s (%s) value ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (
+            table_name[period],
+            'code, period, volume, price, opening_price, closing_price, pre_closing_price, highest_price, lowest_price, date_ymd, date, create_time',
+            coin_type.replace('_', '/'),
+            time.strftime("%Y%m%d", content_time),
+            content['data'][0]['amount'],  # 成交量
+            content['data'][0]['close'],  # 收盘价
+            content['data'][0]['open'],  # 开盘价
+            content['data'][0]['close'],  # 收盘价
+            0,
+            content['data'][0]['high'],  # 最高价
+            content['data'][0]['low'],  # 最低价
+            time.strftime("%Y%m%d", content_time),
+            time.strftime("%Y-%m-%d %H:%M", content_time),
+            time.strftime("%Y-%m-%d %H:%M:%S", content_time)
+        )
+        try:
+            add_res = mysql_server.my_execute(add_sql)
+        except BaseException as e:
+            print('K线图:%s数据添加数据库失败. 原因为:%s' % (coin_type, e))
+            return
+        if add_res <= 0:
+            print('K线图:%s%s数据添加数据库失败' % (coin_type, period))
 
 
 def update_sql(content, coin_type, period, mysql_server):
@@ -183,22 +190,22 @@ def timekeeping(coin_type, number, mysql_server):
             t = threading.Thread(target=worker, args=(coin_type, '60min', mysql_server))
             threads.append(t)
             t.start()
-        if(new_minute == 0 and new_second == number):
+        if(new_minute == 10 and new_second == number):
             # 4小时线，每小时更新一次
             t = threading.Thread(target=worker, args=(coin_type, '4hour', mysql_server))
             threads.append(t)
             t.start()
-        if(new_minute == 0 and new_second == number):
+        if(new_minute == 20 and new_second == number):
             # 日线，每小时更新一次
             t = threading.Thread(target=worker, args=(coin_type, '1day', mysql_server))
             threads.append(t)
             t.start()
-        if(new_minute == 0 and new_second == number):
+        if(new_minute == 30 and new_second == number):
             # 周线，每小时更新一次
             t = threading.Thread(target=worker, args=(coin_type, '1week', mysql_server))
             threads.append(t)
             t.start()
-        if(new_minute == 0 and new_second == number):
+        if(new_minute == 40 and new_second == number):
             # 月线，每小时更新一次
             t = threading.Thread(target=worker, args=(coin_type, '1mon', mysql_server))
             threads.append(t)
