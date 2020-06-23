@@ -79,8 +79,10 @@ def get_ticker_redis(coin_type, data):
     # 组合数据
     add_dict = combination_data(coin_type, data, cny_price)
     # 发布和储存
-    redis_conn.REDIS.publish('vb:ticker:chan:mobei', str(add_dict).replace("'", '"').encode())
-    redis_conn.REDIS.set('vb:ticker:newitem:%s' % (coin_type), str(add_dict).encode())
+    if __init__.推送_通道_行情 != '':
+        redis_conn.REDIS.publish(__init__.推送_通道_行情, str(add_dict).replace("'", '"').encode())
+    if __init__.推送_合约_行情 != '':
+        redis_conn.REDIS.set(__init__.推送_合约_行情 % (coin_type), str(add_dict).encode())
 
 
 def get_ticker_mysql(coin_type):

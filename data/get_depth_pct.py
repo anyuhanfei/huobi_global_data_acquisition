@@ -75,8 +75,10 @@ def add_data_redis(coin_type, add_data):
     '''
     from config import redis_conn
     res_add_data = str(add_data).replace("'", '"').encode()
-    redis_conn.REDIS.publish('vb:depth:pct:chan:mobei', res_add_data)
-    redis_conn.REDIS.set('vb:depth:pct:newitem:%s' % (coin_type), res_add_data)
+    if __init__.推送_通道_深度图 != '':
+        redis_conn.REDIS.publish(__init__.推送_通道_深度图, res_add_data)
+    if __init__.推送_合约_深度图 != '':
+        redis_conn.REDIS.set(__init__.推送_合约_深度图 % (coin_type), res_add_data)
 
 
 def add_data_mysql(coin_type, add_data):

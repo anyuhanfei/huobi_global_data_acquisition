@@ -53,6 +53,20 @@ get_depth_pct_url = 'https://api.huobipro.com/market/depth?symbol=%s&type=step0'
 get_new_price_url = 'https://api.huobipro.com/market/detail/merged?symbol=%s'
 goods_kline_url = 'https://api.huobipro.com/market/history/kline?period=%s&size=' + str(GET_KLINE_SIZE) + '&symbol=%s'
 
+'''redis推送(通道)'''
+推送_通道_最新价 = ""
+推送_通道_行情 = "contract:vb:ticker:chan:mobei"
+推送_通道_深度图 = "contract:vb:depth:pct:chan:mobei"
+推送_通道_盘口 = "contract:vb:depth:chan:mobei"
+推送_通道_实时行情 = "contract:vb:trader:chan:mobei"
+
+'''redis推送(合约)'''
+推送_合约_最新价 = "contract:vb:ticker:newprice:%s"
+推送_合约_行情 = "contract:vb:ticker:newitem:%s"
+推送_合约_深度图 = "contract:vb:depth:pct:newitem:%s"
+推送_合约_盘口 = "contract:vb:depth:newitem:%s"
+推送_合约_实时行情 = "contract:vb:trader:newitem:%s"
+
 '''风控'''
 使用风控 = True
 风控_KEY = 'vb:risk:management:'  # 例: vb:risk:management:GOLD/USDT

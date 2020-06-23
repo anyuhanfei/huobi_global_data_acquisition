@@ -35,7 +35,10 @@ def get_new_price_redis(coin_type, data):
     except BaseException:
         风控_number = 0
     # 存储
-    redis_conn.REDIS.set('vb:ticker:newprice:%s' % (coin_type), data['tick']['close'] + 风控_number)
+    if __init__.推送_通道_最新价 != '':
+        redis_conn.REDIS.publish(__init__.推送_通道_最新价, data['tick']['close'] + 风控_number)
+    if __init__.推送_合约_最新价 != '':
+        redis_conn.REDIS.set(__init__.推送_合约_最新价 % (coin_type), data['tick']['close'] + 风控_number)
 
 
 def get_new_price_mysql(data):

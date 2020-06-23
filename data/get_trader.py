@@ -61,8 +61,10 @@ def get_trader_redis(coin_type, data):
     '''
     from config import redis_conn
     # 发布和存储
-    redis_conn.REDIS.publish('vb:trader:chan:mobei', str(data).replace("'", '"').encode())
-    redis_conn.REDIS.set('vb:trader:newitem:%s' % (coin_type), str(data).encode())
+    if __init__.推送_通道_实时行情 != '':
+        redis_conn.REDIS.publish(__init__.推送_通道_实时行情, str(data).replace("'", '"').encode())
+    if __init__.推送_合约_实时行情 != '':
+        redis_conn.REDIS.set(__init__.推送_合约_实时行情 % (coin_type), str(data).encode())
 
 
 def get_trader_mysql(coin_type):
