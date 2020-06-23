@@ -54,7 +54,7 @@ def add_sql(content, coin_type, period, mysql_server):
             'code, period, volume, price, opening_price, closing_price, pre_closing_price, highest_price, lowest_price, date_ymd, date, create_time',
             coin_type.replace('_', '/'),
             time.strftime("%Y%m%d", content_time),
-            content['data'][0]['amount'],  # 成交量
+            round(content['data'][0]['amount'], 7),  # 成交量
             content['data'][0]['close'],  # 收盘价
             content['data'][0]['open'],  # 开盘价
             content['data'][0]['close'],  # 收盘价
@@ -92,7 +92,7 @@ def update_sql(content, coin_type, period, mysql_server):
                 'code, period, volume, price, opening_price, closing_price, pre_closing_price, highest_price, lowest_price, date_ymd, date, create_time',
                 coin_type.replace('_', '/'),
                 time.strftime("%Y%m%d", content_time),
-                content['data'][i]['amount'],  # 成交量
+                round(content['data'][i]['amount'], 7),  # 成交量
                 content['data'][i]['close'],  # 收盘价
                 content['data'][i]['open'],  # 开盘价
                 content['data'][i]['close'],  # 收盘价
@@ -116,7 +116,11 @@ def update_sql(content, coin_type, period, mysql_server):
                 coin_type.replace('_', '/'),
                 time.strftime("%Y-%m-%d %H:%M", time.localtime(content['data'][i]['id']))
             )
-        update_res = mysql_server.my_execute(update_sql)
+        try:
+            update_res = mysql_server.my_execute(update_sql)
+        except BaseException as e:
+            print('K线图:%s数据修改数据库失败. 原因为:%s' % (coin_type, e))
+            return
         if update_res <= 0:
             print('K线图:%s%s数据修改数据库失败' % (coin_type, period))
 
@@ -131,7 +135,7 @@ def worker(coin_type, period, mysql_server):
     from config import redis_conn
 
     content = get_data(coin_type, period)
-    if content == {}:
+    if content == {} or content['status'] != 'ok':
         print('K线图:%s%sk线图数据获取失败' % (coin_type, period))
         return
     try:

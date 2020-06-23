@@ -13,10 +13,11 @@ COIN_USDT = ['BTC/USDT', 'ETH/USDT', 'XRP/USDT', 'LTC/USDT', 'BCH/USDT', 'EOS/US
 COIN_ETH = ['EOS/ETH', 'ADA/ETH', 'OMG/ETH']  # ETH相关币种对
 COIN_BTC = ['LTC/BTC', 'BCH/BTC', 'ETH/BTC', 'EOS/BTC', 'XRP/BTC', 'ETC/BTC']  # BTC相关币种对
 
-# 设置使用的币种对
-COIN_TYPE = COIN_USDT + COIN_ETH + COIN_BTC
-COIN_TYPE_KLINE = COIN_USDT + COIN_ETH + COIN_BTC
+# 设置使用的币种对, 加一个空列表是因为防止进行浅复制
+COIN_TYPE = [] + COIN_USDT
 
+# K线图使用的币种对, 无需修改
+COIN_TYPE_KLINE = [] + COIN_TYPE
 for i in range(0, len(COIN_TYPE) - 1):
     COIN_TYPE_KLINE[i] = COIN_TYPE[i].replace('/', '_')
 
