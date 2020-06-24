@@ -30,7 +30,7 @@ def combination_data(coin_type, content):
         bids += round(content['tick']['bids'][i][1], 2)
         add_dict['bids'].append({
             'totalSize': bids,
-            'price': round(content['tick']['bids'][i][0] + 风控_number, 2)
+            'price': round(content['tick']['bids'][i][0] + 风控_number, 5)
         })
     add_dict['asks'] = []
     asks = 0
@@ -38,7 +38,7 @@ def combination_data(coin_type, content):
         asks += round(content['tick']['asks'][i][1], 2)
         add_dict['asks'].append({
             'totalSize': asks,
-            'price': round(content['tick']['asks'][i][0] + 风控_number, 2)
+            'price': round(content['tick']['asks'][i][0] + 风控_number, 5)
         })
     return add_dict
 
