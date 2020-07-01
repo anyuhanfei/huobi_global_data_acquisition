@@ -18,7 +18,7 @@ COIN_TYPE = [] + COIN_USDT
 
 # K线图使用的币种对, 无需修改
 COIN_TYPE_KLINE = [] + COIN_TYPE
-for i in range(0, len(COIN_TYPE) - 1):
+for i in range(0, len(COIN_TYPE)):
     COIN_TYPE_KLINE[i] = COIN_TYPE[i].replace('/', '_')
 
 '''use database type'''
