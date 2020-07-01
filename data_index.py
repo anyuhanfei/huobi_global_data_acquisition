@@ -4,12 +4,12 @@
 import multiprocessing
 import time
 
-from data import get_coin_cny
-from data import get_ticker
-from data import get_depth
-from data import get_trader
-from data import get_depth_pct
-from data import get_new_price
+from utils import get_coin_cny
+from utils import get_ticker
+from utils import get_depth
+from utils import get_trader
+from utils import get_depth_pct
+from utils import get_new_price
 
 import __init__
 

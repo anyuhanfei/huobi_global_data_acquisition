@@ -5,7 +5,7 @@ import multiprocessing
 import time
 
 import __init__
-from data import goods_kline
+from utils import goods_kline
 from config.mysql_conn import sqlLink
 
 
