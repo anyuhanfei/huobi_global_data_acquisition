@@ -50,7 +50,7 @@ def get_ticker(coin_type):
     # 获取返回结果
     get_ricker_url = __init__.get_ticker_url % (coin_type_dispose)
     get_ricker_content = __init__.get_url(get_ricker_url, 'get')
-    if get_ricker_content == {}:
+    if get_ricker_content == {} or 'tick' in get_ricker_content is False:
         print('实时行情获取:%s实时行情获取失败' % (coin_type))
         return None
     # 储存和发布

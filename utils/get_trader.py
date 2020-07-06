@@ -19,6 +19,7 @@ def combination_data(coin_type, content):
     add_dict['time'] = time.strftime('%H:%M')
     add_dict['timestamp'] = int(time.time())
     add_dict['data'] = []
+
     for i in content['data']:
         add_dict['data'].append({
             'dt': i['data'][0]['ts'],
@@ -39,7 +40,7 @@ def get_trader(coin_type):
     # 获取返回结果
     get_trader_url = __init__.get_trader_url % (coin_type_dispose)
     get_trader_content = __init__.get_url(get_trader_url, 'get')
-    if get_trader_content == {}:
+    if get_trader_content == {} or 'data' in get_trader_content is False:
         print('获取实时成交数据:%s实时成交数据获取失败' % (coin_type))
         return None
     # 组合数据

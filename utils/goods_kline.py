@@ -135,7 +135,7 @@ def worker(coin_type, period, mysql_server):
     from config import redis_conn
 
     content = get_data(coin_type, period)
-    if content == {} or content['status'] != 'ok':
+    if content == {} or content['status'] != 'ok' or 'data' in content is False:
         print('K线图:%s%sk线图数据获取失败' % (coin_type, period))
         return
     try:

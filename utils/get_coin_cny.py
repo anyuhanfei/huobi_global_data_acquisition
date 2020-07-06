@@ -4,7 +4,7 @@ import __init__
 def get_coin_cny():
     '''获取币种兑换人民币汇率'''
     content = __init__.get_url(__init__.get_coin_cny_url, 'get')
-    if content == {}:
+    if content == {} or 'data' in content is False:
         print('获取币种兑换人民币汇率:汇率获取失败')
         return None
     if __init__.DATABASE_TYPE == 'redis':

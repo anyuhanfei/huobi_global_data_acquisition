@@ -50,7 +50,7 @@ def get_depth(coin_type):
     # 获取返回结果
     get_depth_url = __init__.get_depth_url % (coin_type_dispose)
     get_depth_content = __init__.get_url(get_depth_url, 'get')
-    if get_depth_content == {}:
+    if get_depth_content == {} or 'tick' in get_depth_content is False:
         print('获取盘口数据:%s盘口数据获取失败' % (coin_type))
         return None
     # 组合数据

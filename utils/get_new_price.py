@@ -11,7 +11,7 @@ def get_new_price(coin_type):
     # 获取返回结果
     get_new_price_url = __init__.get_new_price_url % (coin_type_dispose)
     get_new_price_content = __init__.get_url(get_new_price_url, 'get')
-    if get_new_price_content == {}:
+    if get_new_price_content == {} or 'tick' in get_new_price_content is False:
         print('获取最新价格:%s最新价格获取失败' % (coin_type))
         return None
     # 储存和发布

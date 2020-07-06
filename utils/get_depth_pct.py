@@ -53,7 +53,7 @@ def get_depth_pct(coin_type):
     # 获取返回结果
     get_depth_pct_url = __init__.get_depth_pct_url % (coin_type_dispose)
     get_depth_pct_content = __init__.get_url(get_depth_pct_url, 'get')
-    if get_depth_pct_content == {}:
+    if get_depth_pct_content == {} or 'tick' in get_depth_pct_content is False:
         print('获取深度图数据:%s深度图数据获取失败' % (coin_type))
         return None
     # 组合数据
