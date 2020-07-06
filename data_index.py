@@ -4,32 +4,33 @@
 import multiprocessing
 import time
 
-from utils import get_coin_cny
-from utils import get_ticker
-from utils import get_depth
-from utils import get_trader
-from utils import get_depth_pct
-from utils import get_new_price
+from utils import CNY汇率
+from utils import 实时行情
+from utils import 盘口
+from utils import 实时成交
+from utils import 深度图
+from utils import 最新价格
 
-import __init__
+from config import config
 
 
-def get_data(coin_type):
+def get_data(币种对):
     while True:
-        start_time = time.time()
-        get_ticker.get_ticker(coin_type)
-        get_depth.get_depth(coin_type)
-        get_trader.get_trader(coin_type)
-        get_depth_pct.get_depth_pct(coin_type)
-        get_new_price.get_new_price(coin_type)
-        end_time = time.time()
-        execution_time = end_time - start_time
-        time.sleep(0 if execution_time > __init__.GET_DATA_INTERVAL_TIME else __init__.GET_DATA_INTERVAL_TIME - execution_time)
+        开始时间 = time.time()
+        实时行情.get_data(币种对)
+        盘口.get_data(币种对)
+        实时成交.get_data(币种对)
+        深度图.get_data(币种对)
+        最新价格.get_data(币种对)
+        结束时间 = time.time()
+        执行时间 = 结束时间 - 开始时间
+        time.sleep(0 if 执行时间 > config.推送间隔时间 else config.推送间隔时间 - 执行时间)
+        print('over')
 
 
 def coin_cny_get():
     while True:
-        get_coin_cny.get_coin_cny()
+        CNY汇率.CNY汇率()
         time.sleep(0.4)
 
 
@@ -42,12 +43,12 @@ if __name__ == '__main__':
     child_process.start()
     time.sleep(0.1)
     # 循环币种设置子进程
-    for coin_type in __init__.COIN_TYPE:
-        child_process = multiprocessing.Process(target=get_data, args=(coin_type, ))
+    for 币种对 in config.推送币种对:
+        child_process = multiprocessing.Process(target=get_data, args=(币种对, ))
         child_process.daemon = True
         jobs.append(child_process)
         child_process.start()
-        time.sleep(__init__.GET_DATA_INTERVAL_TIME / len(__init__.COIN_TYPE))
+        time.sleep(config.推送间隔时间 / len(config.推送币种对))
     while True:
         command = input('退出请输入out:')
         if command == 'out':
