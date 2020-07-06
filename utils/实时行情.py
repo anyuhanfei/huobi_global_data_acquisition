@@ -80,7 +80,7 @@ def get_ticker_redis(币种对, 数据):
         elif coin[1] == 'BTC':
             cny_price = float(redis连接.合约REDIS[config.BTC2CNY].decode())
         else:
-            cny_price = json.loads(redis连接.合约REDIS[config.合约_set_实时行情].decode().replace("\'", "\""))['cnyPrice']
+            cny_price = json.loads(redis连接.合约REDIS[config.合约_set_实时行情 % ('ETH/USDT')].decode().replace("\'", "\""))['cnyPrice']
         # 组合数据
         add_dict = combination_data(币种对, 数据, cny_price, '合约')
         # 发布和储存
@@ -94,7 +94,7 @@ def get_ticker_redis(币种对, 数据):
         elif coin[1] == 'BTC':
             cny_price = float(redis连接.币币REDIS[config.BTC2CNY].decode())
         else:
-            cny_price = json.loads(redis连接.币币REDIS[config.币币_set_实时行情].decode().replace("\'", "\""))['cnyPrice']
+            cny_price = json.loads(redis连接.币币REDIS[config.币币_set_实时行情 % ('ETH/USDT')].decode().replace("\'", "\""))['cnyPrice']
         # 组合数据
         add_dict = combination_data(币种对, 数据, cny_price, '币币')
         # 发布和储存

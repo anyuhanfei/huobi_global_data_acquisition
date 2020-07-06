@@ -25,7 +25,6 @@ def get_data(币种对):
         结束时间 = time.time()
         执行时间 = 结束时间 - 开始时间
         time.sleep(0 if 执行时间 > config.推送间隔时间 else config.推送间隔时间 - 执行时间)
-        print('over')
 
 
 def coin_cny_get():
