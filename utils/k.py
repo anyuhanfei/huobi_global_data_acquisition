@@ -181,7 +181,7 @@ def timekeeping(币种对, 秒数, MYSQL连接):
         当前分钟数 = 当前时间.tm_min
         当前秒数 = 当前时间.tm_sec
         # 业务
-        if(当前分钟数 == 秒数):
+        if(当前秒数 == 秒数):
             # 一分钟线，每分钟的第一秒执行
             t = threading.Thread(target=worker, args=(币种对, '1min', MYSQL连接))
             threads.append(t)
