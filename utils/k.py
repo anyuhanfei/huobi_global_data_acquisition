@@ -17,7 +17,7 @@ def get_data(币种对, K线图类型):
     return:
         dict 接口返回的无修改数据
     '''
-    币种对其他格式 = config.币种对格式替换(币种对, '_', '')
+    币种对其他格式 = init.币种对格式替换(币种对, '_', '')
     K线图URL = init.K线图URL % (K线图类型, 币种对其他格式)
     数据 = init.访问URL(K线图URL, 'get')
     return 数据
