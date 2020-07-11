@@ -181,47 +181,47 @@ def timekeeping(币种对, 秒数, MYSQL连接):
         当前分钟数 = 当前时间.tm_min
         当前秒数 = 当前时间.tm_sec
         # 业务
-        if(当前秒数 == 秒数):
+        if 当前秒数 == 秒数:
             # 一分钟线，每分钟的第一秒执行
             t = threading.Thread(target=worker, args=(币种对, '1min', MYSQL连接))
             threads.append(t)
             t.start()
-        if(当前分钟数 % 5 == 1 and 当前秒数 == 秒数):
+        if 当前分钟数 % 5 == 1 and 当前秒数 == 秒数:
             # 五分钟线，每五分钟更新一次
             t = threading.Thread(target=worker, args=(币种对, '5min', MYSQL连接))
             threads.append(t)
             t.start()
-        if(当前分钟数 % 15 == 1 and 当前秒数 == 秒数):
+        if 当前分钟数 % 15 == 1 and 当前秒数 == 秒数:
             # 十五分钟线，每十五分钟更新一次
             t = threading.Thread(target=worker, args=(币种对, '15min', MYSQL连接))
             threads.append(t)
             t.start()
-        if(当前分钟数 % 30 == 1 and 当前秒数 == 秒数):
+        if 当前分钟数 % 30 == 1 and 当前秒数 == 秒数:
             # 三十分钟线，每三十分钟更新一次
             t = threading.Thread(target=worker, args=(币种对, '30min', MYSQL连接))
             threads.append(t)
             t.start()
-        if(当前分钟数 % 15 == 0 and 当前秒数 == 秒数):
+        if 当前分钟数 % 15 == 0 and 当前秒数 == 秒数:
             # 小时线，每十五分钟更新一次
             t = threading.Thread(target=worker, args=(币种对, '60min', MYSQL连接))
             threads.append(t)
             t.start()
-        if(当前分钟数 == 10 and 当前秒数 == 秒数):
+        if 当前分钟数 == 10 and 当前秒数 == 秒数:
             # 4小时线，每小时更新一次
             t = threading.Thread(target=worker, args=(币种对, '4hour', MYSQL连接))
             threads.append(t)
             t.start()
-        if(当前分钟数 == 20 and 当前秒数 == 秒数):
+        if 当前分钟数 == 20 and 当前秒数 == 秒数:
             # 日线，每小时更新一次
             t = threading.Thread(target=worker, args=(币种对, '1day', MYSQL连接))
             threads.append(t)
             t.start()
-        if(当前分钟数 == 30 and 当前秒数 == 秒数):
+        if 当前分钟数 == 30 and 当前秒数 == 秒数:
             # 周线，每小时更新一次
             t = threading.Thread(target=worker, args=(币种对, '1week', MYSQL连接))
             threads.append(t)
             t.start()
-        if(当前分钟数 == 40 and 当前秒数 == 秒数):
+        if 当前分钟数 == 40 and 当前秒数 == 秒数:
             # 月线，每小时更新一次
             t = threading.Thread(target=worker, args=(币种对, '1mon', MYSQL连接))
             threads.append(t)
