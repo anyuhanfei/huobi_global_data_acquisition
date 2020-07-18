@@ -13,6 +13,9 @@ BTC币种对 = ['LTC/BTC', 'BCH/BTC', 'ETH/BTC', 'EOS/BTC', 'XRP/BTC', 'ETC/BTC'
 
 币种对 = ETH币种对
 
+'''日志记录'''
+日志开关 = True
+
 '''使用存储方式 redis or mysql'''
 推送存储方式 = 'redis'
 K线图存储方式 = 'mysql'

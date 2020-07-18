@@ -1,5 +1,8 @@
 import requests
 import json
+import os
+import sys
+import time
 
 from config import config
 
@@ -38,3 +41,17 @@ def 访问URL(url, http_type, headers='', cookies=''):
         return json.loads(res.content.decode())
     else:
         return {}
+
+
+def write_log(数据, 币种对, 数据类型, 交易类型):
+    if config.日志开关 is False:
+        return None
+    coin = 币种对.replace('/', '').replace('_', '')
+    time_log_path = '{}.log'.format(time.strftime('%Y%m%d-%H'))
+    log_path = '{path}/log/{交易类型}/{数据类型}/{coin}'.format(path=sys.path[0], 交易类型=交易类型, 数据类型=数据类型, coin=coin)
+    if not os.path.exists(log_path):
+        os.makedirs(log_path)
+
+    with open(log_path + '/' + time_log_path, 'a', encoding='utf8') as f:
+        f.write(time.strftime('%Y-%m-%d %H:%M:%S') + '\n')
+        f.write(数据 + '\n')
