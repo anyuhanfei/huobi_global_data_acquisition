@@ -8,9 +8,9 @@ def CNY汇率():
     if content == {} or 'data' in content is False:
         print('获取币种兑换人民币汇率:汇率获取失败')
         return None
-    if config.推送存储方式 == 'redis':
+    if config.数据存储方式 == 'redis':
         add_data_redis(content)
-    elif config.推送存储方式 == 'mysql':
+    elif config.数据存储方式 == 'mysql':
         add_data_mysql(content)
     else:
         print('获取币种兑换人民币汇率:数据存储类型错误')

@@ -17,11 +17,11 @@ from config import config
 def get_data(币种对):
     while True:
         开始时间 = time.time()
-        实时行情.get_data(币种对)
-        盘口.get_data(币种对)
-        实时成交.get_data(币种对)
-        深度图.get_data(币种对)
-        最新价格.get_data(币种对)
+        实时行情.实时行情(币种对)
+        盘口.盘口(币种对)
+        深度图.深度图(币种对)
+        实时成交.实时成交(币种对)
+        最新价格.最新价格(币种对)
         结束时间 = time.time()
         执行时间 = 结束时间 - 开始时间
         time.sleep(0 if 执行时间 > config.推送间隔时间 else config.推送间隔时间 - 执行时间)
