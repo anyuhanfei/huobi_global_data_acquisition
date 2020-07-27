@@ -72,7 +72,7 @@ class BaseData:
                     '盘口': config.合约_publish_盘口,
                     '深度图': config.合约_publish_深度图,
                     '实时成交': config.合约_publish_实时成交,
-                    '实时行情': config.合约_publish_盘口,
+                    '实时行情': config.合约_publish_实时行情,
                     '最新价格': config.合约_publish_最新价格
                 },
                 'set': {
@@ -88,7 +88,7 @@ class BaseData:
                     '盘口': config.币币_publish_盘口,
                     '深度图': config.币币_publish_深度图,
                     '实时成交': config.币币_publish_实时成交,
-                    '实时行情': config.币币_publish_盘口,
+                    '实时行情': config.币币_publish_实时行情,
                     '最新价格': config.币币_publish_最新价格
                 },
                 'set': {
