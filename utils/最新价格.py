@@ -35,9 +35,9 @@ class 最新价格(BaseData):
             data: 已整理数据，字典类型
         '''
         if config.合约开关 is True:
-            self.redis存储('合约', '实时成交', data['tick']['close'] + self.合约风控数值)
+            self.redis存储('合约', '最新价格', data['tick']['close'] + self.合约风控数值)
         if config.币币开关 is True:
-            self.redis存储('币币', '实时成交', data['tick']['close'] + self.币币风控数值)
+            self.redis存储('币币', '最新价格', data['tick']['close'] + self.币币风控数值)
 
     def add_data_mysql(self, data):
         pass
