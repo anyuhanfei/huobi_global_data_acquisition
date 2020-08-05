@@ -52,7 +52,7 @@ class 深度图(BaseData):
             bids += round(数据['tick']['bids'][i][1], 2)
             add_dict['bids'].append({
                 'totalSize': bids,
-                'price': round(数据['tick']['bids'][i][0], 5)
+                'price': 数据['tick']['bids'][i][0]
             })
         add_dict['asks'] = []
         asks = 0
@@ -60,7 +60,7 @@ class 深度图(BaseData):
             asks += round(数据['tick']['asks'][i][1], 2)
             add_dict['asks'].append({
                 'totalSize': asks,
-                'price': round(数据['tick']['asks'][i][0], 5)
+                'price': 数据['tick']['asks'][i][0]
             })
         return add_dict
 

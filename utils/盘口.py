@@ -53,13 +53,13 @@ class 盘口(BaseData):
         for i in range(0, 20 if len(数据['tick']['bids']) >= 20 else len(数据['tick']['bids'])):
             add_dict['bids'].append({
                 'totalSize': 数据['tick']['bids'][i][1],
-                'price': round(数据['tick']['bids'][i][0], 2)
+                'price': 数据['tick']['bids'][i][0]
             })
         add_dict['asks'] = []
         for i in range(0, 20 if len(数据['tick']['asks']) >= 20 else len(数据['tick']['asks'])):
             add_dict['asks'].append({
                 'totalSize': 数据['tick']['asks'][i][1],
-                'price': round(数据['tick']['asks'][i][0], 2)
+                'price': 数据['tick']['asks'][i][0]
             })
         return add_dict
 
