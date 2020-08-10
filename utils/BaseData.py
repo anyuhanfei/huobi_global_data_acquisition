@@ -38,6 +38,8 @@ class BaseData:
                 self.合约CNY汇率 = float(redis连接.合约REDIS[config.USDT2CNY].decode())
             elif coin[1] == 'BTC':
                 self.合约CNY汇率 = float(redis连接.合约REDIS[config.BTC2CNY].decode())
+            elif coin[1] == 'ETH':
+                self.合约CNY汇率 = float(redis连接.合约REDIS[config.USDT2CNY].decode()) * float(redis连接.合约REDIS['exchange:vb:ticker:newprice:ETH/USDT'].decode())
             else:
                 print('合约CNY汇率读取失败')
                 return
@@ -46,6 +48,8 @@ class BaseData:
                 self.币币CNY汇率 = float(redis连接.币币REDIS[config.USDT2CNY].decode())
             elif coin[1] == 'BTC':
                 self.币币CNY汇率 = float(redis连接.币币REDIS[config.BTC2CNY].decode())
+            elif coin[1] == 'ETH':
+                self.币币CNY汇率 = float(redis连接.币币REDIS[config.USDT2CNY].decode()) * float(redis连接.币币REDIS['exchange:vb:ticker:newprice:ETH/USDT'].decode())
             else:
                 print('币币CNY汇率读取失败')
                 return
