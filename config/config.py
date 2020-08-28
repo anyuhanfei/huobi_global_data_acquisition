@@ -84,7 +84,7 @@ BTC2CNY = 'vb:indexTickerAll:btc2cny'
 
 '''风控'''
 使用风控 = True
-风控_KEY = 'vb:risk:management:'  # 例: vb:risk:management:GOLD/USDT
+风控_KEY = 'contract:vb:risk:management:'  # 例: vb:risk:management:GOLD/USDT
 
 # 周期对应的表名
 K线图表名 = {
