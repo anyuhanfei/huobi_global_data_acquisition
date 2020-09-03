@@ -139,7 +139,7 @@ def worker(币种对, K线图类型, MYSQL连接):
     # 要分别添加到合约和币币
     if config.合约开关 is True:
         try:
-            风控_number = float(redis连接.合约REDIS['%s%s' % (config.风控_KEY, 币种对)].decode()) if (config.使用风控 is True) else 0
+            风控_number = float(redis连接.合约REDIS['%s%s' % (config.风控_KEY, 币种对.replace('_', '/'))].decode()) if (config.使用风控 is True) else 0
         except BaseException:
             风控_number = 0
         for i in range(0, len(数据['data']) - 1):
@@ -151,7 +151,7 @@ def worker(币种对, K线图类型, MYSQL连接):
         update_sql(数据, 币种对, K线图类型, MYSQL连接, '合约')
     if config.币币开关 is True:
         try:
-            风控_number = float(redis连接.币币REDIS['%s%s' % (config.风控_KEY, 币种对)].decode()) if (config.使用风控 is True) else 0
+            风控_number = float(redis连接.币币REDIS['%s%s' % (config.风控_KEY, 币种对.replace('_', '/'))].decode()) if (config.使用风控 is True) else 0
         except BaseException:
             风控_number = 0
         for i in range(0, len(数据['data']) - 1):
