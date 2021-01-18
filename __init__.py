@@ -11,6 +11,14 @@ from config import config
 
 
 
+
+
+
+
+
+
+
+
 '''数据地址和API接口'''
 实时行情URL = 'https://api.huobipro.com/market/detail/merged?symbol=%s'
 CNY汇率URL = "https://www.hbg.com/-/x/general/exchange_rate/list?r=86xktl2lldf"
